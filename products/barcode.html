@@ -18,16 +18,15 @@
         .label-page {
             display: flex;
             flex-wrap: wrap;
-            gap: 4mm;
-            padding: 5mm;
+            gap: 2mm;
+            padding: 3mm;
         }
 
-        /* Standard retail label: 50mm x 30mm */
         .barcode-label {
-            width: 50mm;
-            height: 30mm;
-            border: 0.5pt solid #888;
-            padding: 1.5mm 2mm 1mm 2mm;
+            width: 76.2mm;
+            height: 25.4mm;
+            border: 0.5pt solid #666;
+            padding: 1mm 2mm;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
@@ -39,48 +38,45 @@
         .label-top {
             display: flex;
             justify-content: space-between;
-            align-items: flex-start;
+            align-items: baseline;
         }
 
         .product-name {
-            font-size: 6.5pt;
+            font-size: 6pt;
             font-weight: bold;
-            line-height: 1.2;
-            max-width: 60%;
+            white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
-            white-space: nowrap;
+            max-width: 65%;
         }
 
         .price {
-            font-size: 8pt;
+            font-size: 7pt;
             font-weight: bold;
-            text-align: right;
             white-space: nowrap;
         }
 
         .label-meta {
             display: flex;
             justify-content: space-between;
-            font-size: 5pt;
-            color: #444;
-            margin-top: 0.5mm;
+            font-size: 4.5pt;
+            color: #333;
+            margin-top: 0.3mm;
         }
 
         .barcode-img {
             display: block;
             width: 100%;
-            height: 10mm;
+            height: 11mm;
             object-fit: contain;
             object-position: center;
-            margin: 1mm 0 0.5mm 0;
+            margin: 0.5mm 0 0.2mm 0;
         }
 
         .barcode-number {
             text-align: center;
-            font-size: 5.5pt;
-            letter-spacing: 1.5px;
-            color: #000;
+            font-size: 5pt;
+            letter-spacing: 1px;
         }
 
         @media print {
@@ -89,12 +85,8 @@
             }
 
             .label-page {
-                padding: 5mm;
-                gap: 3mm;
-            }
-
-            .barcode-label {
-                border: 0.5pt solid #555;
+                padding: 3mm;
+                gap: 2mm;
             }
         }
     </style>
@@ -104,21 +96,16 @@
     <div class="label-page">
         {{#each items}}
         <div class="barcode-label">
-            <div>
-                <div class="label-top">
-                    <div class="product-name">{{this.productName}}</div>
-                    <div class="price">&#8377;{{this.price}}</div>
-                </div>
-                <div class="label-meta">
-                    <span>SKU: {{this.sku}}</span>
-                    <span>Batch: {{this.batchNo}}</span>
-                </div>
+            <div class="label-top">
+                <div class="product-name">{{this.productName}}</div>
+                <div class="price">&#8377;{{this.price}}</div>
             </div>
-            <div>
-                <img class="barcode-img" src="data:image/png;base64,{{lookup ../barcodes this.barcodeKey}}"
-                    alt="barcode" />
-                <div class="barcode-number">{{this.barcodeValue}}</div>
+            <div class="label-meta">
+                <span>SKU: {{this.sku}}</span>
+                <span>Batch: {{this.batchNo}}</span>
             </div>
+            <img class="barcode-img" src="data:image/png;base64,{{lookup ../barcodes this.barcodeKey}}" alt="barcode" />
+            <div class="barcode-number">{{this.barcodeValue}}</div>
         </div>
         {{/each}}
     </div>
