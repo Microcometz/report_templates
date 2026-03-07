@@ -1,71 +1,127 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <!-- Google Barcode Font -->
-    <link href="https://fonts.googleapis.com/css2?family=Libre+Barcode+128&display=swap" rel="stylesheet">
 
+<head>
+    <meta charset="UTF-8">
     <style>
-        body {
-            font-family: Arial, sans-serif;
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
 
+        body {
+            font-family: Arial, sans-serif;
+            background: #fff;
+        }
+
+        .label-page {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4mm;
+            padding: 5mm;
+        }
+
+        /* Standard retail label: 50mm x 30mm */
         .barcode-label {
-            width: 300px;
-            border: 1px solid #000;
-            padding: 5px;
+            width: 50mm;
+            height: 30mm;
+            border: 0.5pt solid #888;
+            padding: 1.5mm 2mm 1mm 2mm;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            background: #fff;
+            overflow: hidden;
+            page-break-inside: avoid;
+        }
+
+        .label-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
         }
 
         .product-name {
-            font-size: 16px;
+            font-size: 6.5pt;
             font-weight: bold;
-            margin-bottom: 3px;
-        }
-
-        .sku {
-            font-size: 14px;
-            margin-bottom: 4px;
+            line-height: 1.2;
+            max-width: 60%;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
         }
 
         .price {
-            font-size: 16px;
+            font-size: 8pt;
             font-weight: bold;
-            margin-top: 4px;
+            text-align: right;
+            white-space: nowrap;
         }
 
-        .barcode {
-            font-family: 'Libre Barcode 128', cursive;
-            font-size: 60px;
-            text-align: center;
-            margin-top: 3px;
-            line-height: 1;
+        .label-meta {
+            display: flex;
+            justify-content: space-between;
+            font-size: 5pt;
+            color: #444;
+            margin-top: 0.5mm;
+        }
+
+        .barcode-img {
+            display: block;
+            width: 100%;
+            height: 10mm;
+            object-fit: contain;
+            object-position: center;
+            margin: 1mm 0 0.5mm 0;
         }
 
         .barcode-number {
             text-align: center;
-            font-size: 14px;
-            letter-spacing: 2px;
-            margin-top: 1px;
+            font-size: 5.5pt;
+            letter-spacing: 1.5px;
+            color: #000;
+        }
+
+        @media print {
+            body {
+                margin: 0;
+            }
+
+            .label-page {
+                padding: 5mm;
+                gap: 3mm;
+            }
+
+            .barcode-label {
+                border: 0.5pt solid #555;
+            }
         }
     </style>
 </head>
 
 <body>
-    <div class="barcode-label">
-        <div class="product-name">{{productName}}</div>
-        <div class="sku">SKU: {{sku}}</div>
-        <div>Batch: {{batchNo}}</div>
-
-        <div class="price">₹ {{price}}</div>
-
-        <!-- Barcode using font -->
-        <div class="barcode">
-            {{barcodeValue}}
+    <div class="label-page">
+        {{#each items}}
+        <div class="barcode-label">
+            <div>
+                <div class="label-top">
+                    <div class="product-name">{{this.productName}}</div>
+                    <div class="price">&#8377;{{this.price}}</div>
+                </div>
+                <div class="label-meta">
+                    <span>SKU: {{this.sku}}</span>
+                    <span>Batch: {{this.batchNo}}</span>
+                </div>
+            </div>
+            <div>
+                <img class="barcode-img" src="data:image/png;base64,{{lookup ../barcodes this.barcodeKey}}"
+                    alt="barcode" />
+                <div class="barcode-number">{{this.barcodeValue}}</div>
+            </div>
         </div>
-
-        <!-- Human readable number -->
-        <div class="barcode-number">
-            {{barcodeValue}}
-        </div>
+        {{/each}}
     </div>
 </body>
+
 </html>
