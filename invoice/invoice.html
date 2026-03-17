@@ -2,166 +2,145 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Invoice</title>
 
 <style>
+
 body{
-    font-family: Arial, sans-serif;
-    font-size: 12px;
-    margin: 20px;
+    font-family: monospace;
+    width:300px;
+    margin:0;
+    font-size:12px;
 }
 
-.invoice-box{
-    width: 80mm;
-    margin: auto;
+.receipt{
+    width:100%;
 }
 
-.header{
-    text-align: center;
+.center{
+    text-align:center;
 }
 
-.header h2{
-    margin: 0;
+.right{
+    text-align:right;
 }
 
-.header p{
-    margin: 2px 0;
+.line{
+    border-top:1px dashed black;
+    margin:6px 0;
 }
 
-.info{
-    margin-top: 10px;
+table{
+    width:100%;
+    border-collapse:collapse;
 }
 
-.info table{
-    width: 100%;
+th{
+    text-align:left;
+    font-size:11px;
 }
 
-.items{
-    margin-top: 10px;
+td{
+    font-size:11px;
 }
 
-.items table{
-    width: 100%;
-    border-collapse: collapse;
-}
-
-.items th{
-    border-bottom: 1px dashed black;
-    text-align: left;
-    padding: 5px;
-}
-
-.items td{
-    padding: 5px;
-}
-
-.total{
-    margin-top: 10px;
-}
-
-.total table{
-    width: 100%;
-}
-
-.total td{
-    padding: 3px;
+th.right, td.right{
+    text-align:right;
 }
 
 .footer{
-    text-align: center;
-    margin-top: 15px;
-    font-size: 11px;
+    text-align:center;
+    margin-top:8px;
 }
-</style>
 
+</style>
 </head>
 
 <body>
 
-<div class="invoice-box">
+<div class="receipt">
 
-<div class="header">
-<h2>Mikro Cometz</h2>
-<p>{{companyAddress}}</p>
-<p>Phone: 9756746575</p>
-<p>GSTIN: 646646</p>
+<!-- Company Header -->
+
+<div class="center">
+<b>{{companyName}}</b><br>
+{{companyAddress}}<br>
+Phone: {{companyPhone}}
 </div>
 
-<hr>
+<div class="line"></div>
 
-<div class="info">
-<table>
-<tr>
-<td><b>Invoice No:</b></td>
-<td>{{docCode}}</td>
-</tr>
+<!-- Invoice Info -->
 
-<tr>
-<td><b>Date:</b></td>
-<td>{{docDate}}</td>
-</tr>
-
-<tr>
-<td><b>Customer:</b></td>
-<td>{{customerName}}</td>
-</tr>
-</table>
+<div>
+Date : {{date}} <br>
+Invoice : {{invoiceNumber}} <br>
+Customer : {{customerName}} <br>
+Phone : {{customerPhone}}
 </div>
 
-<div class="items">
+<div class="line"></div>
+
+<!-- Item Table -->
+
 <table>
 
-<thead>
 <tr>
 <th>Item</th>
-<th>Qty</th>
-<th>Price</th>
-<th>Total</th>
+<th class="right">Qty</th>
+<th class="right">Rate</th>
+<th class="right">Gross</th>
+<th class="right">Disc</th>
+<th class="right">Net</th>
 </tr>
-</thead>
 
-<tbody>
-
-{{#invoiceDetails}}
-<tr>
-<td>{{name}}</td>
-<td>{{qty}}</td>
-<td>{{rate}}</td>
-<td>{{netAmount}}</td>
-</tr>
-{{/items}}
-
-</tbody>
+{{items}}
 
 </table>
-</div>
 
-<hr>
+<div class="line"></div>
 
-<div class="total">
+<!-- Totals -->
+
 <table>
 
 <tr>
-<td>Subtotal</td>
-<td align="right">{{grossAmount}}</td>
+<td>Gross Total</td>
+<td class="right">{{grossTotal}}</td>
 </tr>
 
 <tr>
-<td>Tax</td>
-<td align="right">{{taxAmount}}</td>
+<td>Item Discount</td>
+<td class="right">{{itemDiscount}}</td>
 </tr>
 
 <tr>
-<td><b>Grand Total</b></td>
-<td align="right"><b>{{invoiceTotal}}</b></td>
+<td>Coupon Discount</td>
+<td class="right">{{couponDiscount}}</td>
+</tr>
+
+<tr>
+<td><b>Net Amount</b></td>
+<td class="right"><b>{{netAmount}}</b></td>
 </tr>
 
 </table>
+
+<div class="line"></div>
+
+<!-- Payment Info -->
+
+<div>
+Payment Type : {{paymentType}} <br>
+Payment Ref : {{paymentRef}}
 </div>
 
+<div class="line"></div>
+
+<!-- Footer -->
+
 <div class="footer">
-<p>Thank you for shopping!</p>
-<p>Visit Again</p>
+Thank you! <br>
+Visit again
 </div>
 
 </div>
