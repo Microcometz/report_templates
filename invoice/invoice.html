@@ -91,15 +91,23 @@ Phone : {{mobile}}
 <th class="right">Net</th>
 </tr>
 
-{{#each invoiceDetails}}
-<tr>
-  <td>{{this.product}}</td>
-  <td class="right">{{this.qty}}</td>
-  <td class="right">{{this.rate}}</td>
-  <td class="right">{{this.grossAmount}}</td>
-  <td class="right">{{this.discount}}</td>
-  <td class="right">{{this.netAmount}}</td>
-</tr>
+<!-- Items -->
+{{#each items}}
+<div class="item-name">
+    {{this.name}}
+</div>
+
+<table>
+    <tr>
+        <td>{{this.quantity}} Pcs</td>
+        <td class="right">{{this.rate}}</td>
+        <td class="right">{{this.gross}}</td>
+        <td class="right">{{this.discount}}</td>
+        <td class="right">{{this.netTotal}}</td>
+    </tr>
+</table>
+
+<div class="line"></div>
 {{/each}}
 
 </table>
