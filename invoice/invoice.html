@@ -60,7 +60,7 @@ th.right, td.right{
 <!-- Company Header -->
 
 <div class="center">
-<b>{{invoiceMainData.comapnyName}}</b><br>
+<b>{{invoiceMainData.companyName}}</b><br>
 {{invoiceMainData.companyAddress}}<br>
 Phone: {{invoiceMainData.companyPhone}}
 </div>
@@ -93,14 +93,15 @@ Phone : {{invoiceMainData.mobile}}
 
 
 
-{{#each inoiceDetaisData}}
+{{#each invoiceDetailsData}}
     <tr>
-        <td>{{this.product}} Pcs</td>
-        <td>{{this.quantity}} Pcs</td>
+        <td>{{this.product}}</td>
+        <td>{{this.qty}} Pcs</td>
         <td class="right">{{this.rate}}</td>
-        <td class="right">{{this.gross}}</td>
+        <td class="right">{{this.taxAmount}}</td>
+        <td class="right">{{this.grossAmount}}</td>
         <td class="right">{{this.discount}}</td>
-        <td class="right">{{this.netTotal}}</td>
+        <td class="right">{{this.netAmount}}</td>
     </tr>
 {{/each}}
 
@@ -115,22 +116,22 @@ Phone : {{invoiceMainData.mobile}}
 
 <tr>
 <td>Gross Total</td>
-<td class="right">{{grossAmount}}</td>
+<td class="right">{{invoiceMainData.grossAmount}}</td>
 </tr>
 
 <tr>
 <td>Item Discount</td>
-<td class="right">{{discount}}</td>
+<td class="right">{{invoiceMainData.discount}}</td>
 </tr>
 
 <tr>
 <td>Coupon Discount</td>
-<td class="right">{{couponDiscount}}</td>
+<td class="right">{{invoiceMainData.couponDiscount}}</td>
 </tr>
 
 <tr>
 <td><b>Net Amount</b></td>
-<td class="right"><b>{{invoiceTotal}}</b></td>
+<td class="right"><b>{{invoiceMainData.invoiceTotal}}</b></td>
 </tr>
 
 </table>
