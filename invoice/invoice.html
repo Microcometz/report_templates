@@ -72,10 +72,10 @@ Phone: {{companyPhone}}
 <!-- Invoice Info -->
 
 <div>
-Date : {{date}} <br>
-Invoice : {{invoiceNumber}} <br>
-Customer : {{customerName}} <br>
-Phone : {{customerPhone}}
+Date : {{docDate}} <br>
+Invoice : {{docCode}} <br>
+Customer : {{customer}} <br>
+Phone : {{mobile}}
 </div>
 
 <div class="line"></div>
@@ -93,7 +93,7 @@ Phone : {{customerPhone}}
 <th class="right">Net</th>
 </tr>
 
-{{items}}
+{{invoiceDetails}}
 
 </table>
 
@@ -105,7 +105,7 @@ Phone : {{customerPhone}}
 
 <tr>
 <td>Gross Total</td>
-<td class="right">{{grossTotal}}</td>
+<td class="right">{{invoiceTotal}}</td>
 </tr>
 
 <tr>
