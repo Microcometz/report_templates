@@ -4,7 +4,6 @@
 <meta charset="UTF-8">
 
 <style>
-
 body{
     font-family: monospace;
     width:300px;
@@ -51,7 +50,6 @@ th.right, td.right{
     text-align:center;
     margin-top:8px;
 }
-
 </style>
 </head>
 
@@ -93,7 +91,16 @@ Phone : {{mobile}}
 <th class="right">Net</th>
 </tr>
 
-{{invoiceDetails}}
+{{#each invoiceDetails}}
+<tr>
+  <td>{{this.product}}</td>
+  <td class="right">{{this.qty}}</td>
+  <td class="right">{{this.rate}}</td>
+  <td class="right">{{this.grossAmount}}</td>
+  <td class="right">{{this.discount}}</td>
+  <td class="right">{{this.netAmount}}</td>
+</tr>
+{{/each}}
 
 </table>
 
@@ -105,12 +112,12 @@ Phone : {{mobile}}
 
 <tr>
 <td>Gross Total</td>
-<td class="right">{{invoiceTotal}}</td>
+<td class="right">{{grossAmount}}</td>
 </tr>
 
 <tr>
 <td>Item Discount</td>
-<td class="right">{{itemDiscount}}</td>
+<td class="right">{{discount}}</td>
 </tr>
 
 <tr>
@@ -120,7 +127,7 @@ Phone : {{mobile}}
 
 <tr>
 <td><b>Net Amount</b></td>
-<td class="right"><b>{{netAmount}}</b></td>
+<td class="right"><b>{{invoiceTotal}}</b></td>
 </tr>
 
 </table>
