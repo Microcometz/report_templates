@@ -60,9 +60,9 @@ th.right, td.right{
 <!-- Company Header -->
 
 <div class="center">
-<b>{{companyName}}</b><br>
-{{companyAddress}}<br>
-Phone: {{companyPhone}}
+<b>{{invoiceMainData.comapnyName}}</b><br>
+{{invoiceMainData.companyAddress}}<br>
+Phone: {{invoiceMainData.companyPhone}}
 </div>
 
 <div class="line"></div>
@@ -70,10 +70,10 @@ Phone: {{companyPhone}}
 <!-- Invoice Info -->
 
 <div>
-Date : {{docDate}} <br>
-Invoice : {{docCode}} <br>
-Customer : {{customer}} <br>
-Phone : {{mobile}}
+Date : {{invoiceMainData.docDate}} <br>
+Invoice : {{invoiceMainData.docCode}} <br>
+Customer : {{invoiceMainData.customer}} <br>
+Phone : {{invoiceMainData.mobile}}
 </div>
 
 <div class="line"></div>
@@ -91,8 +91,19 @@ Phone : {{mobile}}
 <th class="right">Net</th>
 </tr>
 
-<!-- Items -->
-{{invoiceDetails}}
+
+
+{{#each inoiceDetaisData}}
+    <tr>
+        <td>{{this.product}} Pcs</td>
+        <td>{{this.quantity}} Pcs</td>
+        <td class="right">{{this.rate}}</td>
+        <td class="right">{{this.gross}}</td>
+        <td class="right">{{this.discount}}</td>
+        <td class="right">{{this.netTotal}}</td>
+    </tr>
+{{/each}}
+
 
 </table>
 
