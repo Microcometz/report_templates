@@ -2,54 +2,68 @@
 <html>
 <head>
 <meta charset="UTF-8">
-
 <style>
-body{
-    font-family: monospace;
-    width:300px;
-    margin:0;
-    font-size:12px;
-}
+    body {
+        font-family: 'Courier New', Courier, monospace; /* Classic POS font */
+        font-size: 11px;
+        text-transform: uppercase; /* The receipt uses all caps for items */
+    }
 
-.receipt{
-    width:100%;
-}
 
-.center{
-    text-align:center;
-}
+    /* Table Setup */
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 5px;
+    }
 
-.right{
-    text-align:right;
-}
+    /* Header Styling */
+    .header-table th {
+        font-weight: normal;
+        border-bottom: 1px solid #000;
+        padding-bottom: 5px;
+        font-size: 10px;
+    }
 
-.line{
-    border-top:1px dashed black;
-    margin:6px 0;
-}
-
-table{
+    /* Item Styling */
+    .item-name {
+        padding-top: 8px;
+        font-weight: bold;
+        display: block;
+    }
     
-    border-collapse:collapse;
-}
+    .arabic-name {
+        display: block;
+        direction: rtl;
+        font-size: 10px;
+        margin-bottom: 4px;
+    }
 
-th{
-    text-align:left;
-    font-size:11px;
-}
+    .item-values td {
+        padding-bottom: 8px;
+    }
 
-td{
-    font-size:11px;
-}
+    /* Alignment */
+    .right { text-align: right; }
+    .center { text-align: center; }
+    .left { text-align: left; }
 
-th.right, td.right{
-    text-align:right;
-}
+    /* Totals Section */
+    .totals-table {
+        margin-top: 10px;
+        border-top: 1px solid #000;
+        padding-top: 5px;
+    }
 
-.footer{
-    text-align:center;
-    margin-top:8px;
-}
+    .totals-table td {
+        padding: 2px 0;
+    }
+
+    .footer {
+        text-align: center;
+        margin-top: 15px;
+        font-size: 12px;
+    }
 </style>
 </head>
 
@@ -57,110 +71,55 @@ th.right, td.right{
 
 <div class="receipt">
 
-<!-- Company Header -->
+    <table>
+        <tr class="header-table">
+            <th class="left" width="15%">QTY</th>
+            <th class="right" width="20%">RATE<br></th>
+            <th class="right" width="20%">GROSS</th>
+            <th class="right" width="20%">DISC</th>
+            <th class="right" width="25%">N.TOTAL</th>
+        </tr>
 
-<div class="center">
-<b>{{invoiceMainData.companyName}}</b><br>
-{{invoiceMainData.companyAddress}}<br>
-Phone: {{invoiceMainData.companyPhone}}
-</div>
-
-<div class="line"></div>
-
-<!-- Invoice Info -->
-
-<div>
-Date : {{invoiceMainData.docDate}} <br>
-Invoice : {{invoiceMainData.docCode}} <br>
-Customer : {{invoiceMainData.customer}} <br>
-Phone : {{invoiceMainData.mobile}}
-</div>
-
-<div class="line"></div>
-
-<!-- Item Table -->
-
-<table style="border-collapse:collapse;">
-
-    <!-- Header -->
-    <tr>
-        <th colspan="7" style="text-align:left;">Item</th>
-    </tr>
-    <tr>
-        <th></th> 
-        <th class="right">Qty</th>
-        <th class="right">Rate</th>
-        <th class="right">Tax</th>
-        <th class="right">Gross</th>
-        <th class="right">Disc</th>
-        <th class="right">Net</th>
-    </tr>
-
-    <!-- Data -->
-    {{#each invoiceDetailsData}}
+        {{#each invoiceDetailsData}}
         <tr>
-            <td colspan="7" style="padding-top:4px;">
-                {{this.product}}
+            <td colspan="5">
+                <span class="item-name">{{this.product}}</span>
+               
             </td>
         </tr>
-        <tr>
-            <td></td>
-            <td class="right">{{this.qty}} Pcs</td>
+        <tr class="item-values">
+            <td class="left">{{this.qty}} Pcs</td>
             <td class="right">{{this.rate}}</td>
-            <td class="right">{{this.taxAmount}}</td>
             <td class="right">{{this.grossAmount}}</td>
             <td class="right">{{this.discount}}</td>
             <td class="right">{{this.netAmount}}</td>
         </tr>
-    {{/each}}
+        {{/each}}
+    </table>
 
-</table>
+    <table class="totals-table">
+        <tr>
+            <td class="right" style="width: 70%;">Gross Total -</td>
+            <td class="right">{{invoiceMainData.grossAmount}}</td>
+        </tr>
+        <tr>
+            <td class="right">(-)Item Discount - </td>
+            <td class="right">{{invoiceMainData.discount}}</td>
+        </tr>
+        <tr>
+            <td class="right">(-)Invoice Discount - </td>
+            <td class="right">{{invoiceMainData.invoiceDiscount}}</td>
+        </tr>
+        <tr style="font-size: 13px; font-weight: bold;">
+            <td class="right">(=) Net Amount - </td>
+            <td class="right">{{invoiceMainData.invoiceTotal}}</td>
+        </tr>
+    </table>
 
-<div class="line"></div>
-
-<!-- Totals -->
-
-<table>
-
-<tr>
-<td>Gross Total</td>
-<td class="right">{{invoiceMainData.grossAmount}}</td>
-</tr>
-
-<tr>
-<td>Item Discount</td>
-<td class="right">{{invoiceMainData.discount}}</td>
-</tr>
-
-<tr>
-<td>Coupon Discount</td>
-<td class="right">{{invoiceMainData.couponDiscount}}</td>
-</tr>
-
-<tr>
-<td><b>Net Amount</b></td>
-<td class="right"><b>{{invoiceMainData.invoiceTotal}}</b></td>
-</tr>
-
-</table>
-
-<div class="line"></div>
-
-<!-- Payment Info -->
-
-<div>
-Payment Type : {{paymentType}} <br>
-Payment Ref : {{paymentRef}}
-</div>
-
-<div class="line"></div>
-
-<!-- Footer -->
-
-<div class="footer">
-Thank you! <br>
-Visit again
-</div>
+    <div class="footer">
+        Thank you for shopping with us<br>
+        VISIT AGAIN!
+    </div>
 
 </div>
 
