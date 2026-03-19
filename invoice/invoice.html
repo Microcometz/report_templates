@@ -29,7 +29,7 @@ body{
 }
 
 table{
-    width:100%;
+    
     border-collapse:collapse;
 }
 
@@ -80,31 +80,39 @@ Phone : {{invoiceMainData.mobile}}
 
 <!-- Item Table -->
 
-<table>
+<table style="border-collapse:collapse;">
 
-<tr>
-<th>Item</th>
-<th class="right">Qty</th>
-<th class="right">Rate</th>
-<th class="right">Gross</th>
-<th class="right">Disc</th>
-<th class="right">Net</th>
-</tr>
-
-
-
-{{#each invoiceDetailsData}}
+    <!-- Header -->
     <tr>
-        <td>{{this.product}}</td>
-        <td>{{this.qty}} Pcs</td>
-        <td class="right">{{this.rate}}</td>
-        <td class="right">{{this.taxAmount}}</td>
-        <td class="right">{{this.grossAmount}}</td>
-        <td class="right">{{this.discount}}</td>
-        <td class="right">{{this.netAmount}}</td>
+        <th colspan="7" style="text-align:left;">Item</th>
     </tr>
-{{/each}}
+    <tr>
+        <th></th> 
+        <th class="right">Qty</th>
+        <th class="right">Rate</th>
+        <th class="right">Tax</th>
+        <th class="right">Gross</th>
+        <th class="right">Disc</th>
+        <th class="right">Net</th>
+    </tr>
 
+    <!-- Data -->
+    {{#each invoiceDetailsData}}
+        <tr>
+            <td colspan="7" style="padding-top:4px;">
+                {{this.product}}
+            </td>
+        </tr>
+        <tr>
+            <td></td>
+            <td class="right">{{this.qty}} Pcs</td>
+            <td class="right">{{this.rate}}</td>
+            <td class="right">{{this.taxAmount}}</td>
+            <td class="right">{{this.grossAmount}}</td>
+            <td class="right">{{this.discount}}</td>
+            <td class="right">{{this.netAmount}}</td>
+        </tr>
+    {{/each}}
 
 </table>
 
