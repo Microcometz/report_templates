@@ -17,6 +17,12 @@
         margin-bottom: 5px;
     }
 
+    .center{
+
+    text-align:center;
+
+}
+
     /* Header Styling */
     .header-table th {
         font-weight: normal;
@@ -68,6 +74,52 @@
 </head>
 
 <body>
+
+    <div class="receipt">
+
+
+
+<!-- Company Header -->
+
+
+
+<div class="center">
+
+<b>{{invoiceMainData.companyName}}</b><br>
+
+{{invoiceMainData.companyAddress}}<br>
+
+Phone: {{invoiceMainData.companyPhone}}
+
+</div>
+
+
+
+<div class="line"></div>
+
+
+
+<!-- Invoice Info -->
+
+
+
+<div>
+
+Date : {{invoiceMainData.docDate}} <br>
+
+Invoice : {{invoiceMainData.docCode}} <br>
+
+Customer : {{invoiceMainData.customer}} <br>
+
+Phone : {{invoiceMainData.mobile}}
+
+</div>
+
+
+
+<div class="line"></div>
+
+
 
 <div class="receipt">
 
