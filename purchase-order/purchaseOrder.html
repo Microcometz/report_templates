@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>Purchase Order</title>
@@ -166,9 +166,9 @@
     <!-- HEADER -->
     <div class="header">
         <div class="company-brand">
-            <h1 th:text="${poMainData.companyName}">Company</h1>
-            <p th:text="${poMainData.companyAddress}"></p>
-            <p th:text="${poMainData.email}"></p>
+            <h1>{{poMainData.companyName}}</h1>
+            <p>{{poMainData.companyAddress}}</p>
+            <p>{{poMainData.email}}</p>
         </div>
         <div class="document-type">
             <h2>Purchase Order</h2>
@@ -184,9 +184,9 @@
             <div>
                 <div class="section-title">Vendor</div>
                 <div class="address-text">
-                    <strong th:text="${poMainData.partyName}"></strong><br>
-                    <span th:text="${poMainData.partyAddress}"></span><br>
-                    <span th:text="${poMainData.contactPerson}"></span>
+                    <strong>{{poMainData.partyName}}</strong><br>
+                    <span>{{poMainData.partyAddress}}</span><br>
+                    <span>{{poMainData.contactPerson}}</span>
                 </div>
             </div>
 
@@ -194,9 +194,9 @@
             <div>
                 <div class="section-title">Ship To</div>
                 <div class="address-text">
-                    <strong th:text="${poMainData.companyName}"></strong><br>
-                    <span th:text="${poMainData.shippingAddress}"></span><br>
-                    <span th:text="${poMainData.email}"></span>
+                    <strong>{{poMainData.companyName}}</strong><br>
+                    <span>{{poMainData.shippingAddress}}</span><br>
+                    <span>{{poMainData.email}}</span>
                 </div>
             </div>
         </div>
@@ -205,10 +205,10 @@
         <div>
             <div class="section-title">Order Details</div>
             <table class="meta-table">
-                <tr><td>PO Number</td><td th:text="${poMainData.documentNumber}"></td></tr>
-                <tr><td>Date Issued</td><td th:text="${poMainData.documentDate}"></td></tr>
-                <tr><td>Delivery Date</td><td th:text="${poMainData.deliveryDate}"></td></tr>
-                <tr><td>Payment Terms</td><td th:text="${poMainData.paymentTerms}"></td></tr>
+                <tr><td>PO Number</td><td>{{poMainData.documentNumber}}</td></tr>
+                <tr><td>Date Issued</td><td>{{poMainData.documentDate}}</td></tr>
+                <tr><td>Delivery Date</td><td>{{poMainData.deliveryDate}}</td></tr>
+                <tr><td>Payment Terms</td><td>{{poMainData.paymentTerms}}</td></tr>
             </table>
         </div>
 
@@ -226,15 +226,17 @@
         </thead>
 
         <tbody>
-        <tr th:each="item : ${itepoDetailsDatams}">
+        {{#each poDetailsData}}
+        <tr>
             <td>
-                <strong th:text="${itpoDetailsDataem.product}"></strong><br>
-                <span th:text="${poDetailsData.description}"></span>
+                <strong>{{this.product}}</strong><br>
+                <span>{{this.description}}</span>
             </td>
-            <td class="text-center" th:text="${poDetailsData.qty}"></td>
-            <td class="text-right" th:text="${poDetailsData.rate}"></td>
-            <td class="text-right" th:text="${poDetailsData.grossAmount}"></td>
+            <td class="text-center">{{this.qty}}</td>
+            <td class="text-right">{{this.rate}}</td>
+            <td class="text-right">{{this.grossAmount}}</td>
         </tr>
+        {{/each}}
         </tbody>
     </table>
 
@@ -243,15 +245,15 @@
         <div class="totals-box">
             <div class="total-row">
                 <span>Subtotal</span>
-                <span th:text="${poDetailsData.grossAmount}"></span>
+                <span>{{poMainData.grossAmount}}</span>
             </div>
             <div class="total-row">
                 <span>Estimated Tax</span>
-                <span th:text="${poDetailsData.taxAmount}"></span>
+                <span>{{poMainData.taxAmount}}</span>
             </div>
             <div class="total-row grand-total">
                 <span>Total Amount</span>
-                <span th:text="${poDetailsData.netAmount}"></span>
+                <span>{{poMainData.totalAmount}}</span>
             </div>
         </div>
     </div>
@@ -260,11 +262,10 @@
     <div class="footer">
         <p>
             <strong>Notes:</strong>
-            <span th:text="${notes}"></span>
+            <span>{{notes}}</span>
         </p>
         <p style="margin-top:15px;">
-            <span th:text="${poMainData.companyName}"></span> |
-            <span th:text="${poMainData.companyName}"></span>
+            {{poMainData.companyName}}
         </p>
     </div>
 
