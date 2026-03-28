@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Purchase Order</title>
+
+    <style>
+        :root {
+            --primary: #1e293b;
+            --accent: #3b82f6;
+            --text-dark: #0f172a;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+        }
+
+        body {
+            background-color: #f8fafc;
+            font-family: 'Inter', 'Segoe UI', Helvetica, sans-serif;
+            margin: 0;
+            padding: 20px;
+            color: var(--text-dark);
+        }
+
+        .page-container {
+            background: #ffffff;
+            width: 210mm;
+            min-height: 297mm;
+            margin: auto;
+            padding: 20mm;
+            box-sizing: border-box;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            border-top: 6px solid var(--primary);
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 40px;
+        }
+
+        .company-brand h1 {
+            margin: 0;
+            font-size: 22px;
+            color: var(--primary);
+        }
+
+        .company-brand p {
+            margin: 4px 0;
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+
+        .document-type h2 {
+            margin: 0;
+            font-size: 28px;
+            font-weight: 300;
+            color: var(--primary);
+            text-transform: uppercase;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: 1.5fr 1fr;
+            gap: 40px;
+            margin-bottom: 50px;
+        }
+
+        .address-labels {
+            display: flex;
+            gap: 40px;
+        }
+
+        .section-title {
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: var(--accent);
+            margin-bottom: 12px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .address-text {
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .meta-table {
+            width: 100%;
+            font-size: 13px;
+            border-collapse: collapse;
+        }
+
+        .meta-table td {
+            padding: 6px 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .meta-table td:first-child {
+            font-weight: 600;
+            color: var(--text-muted);
+        }
+
+        .meta-table td:last-child {
+            text-align: right;
+        }
+
+        .items-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 40px;
+        }
+
+        .items-table th {
+            padding: 14px 10px;
+            background: #f1f5f9;
+            font-size: 12px;
+            text-transform: uppercase;
+        }
+
+        .items-table td {
+            padding: 16px 10px;
+            border-bottom: 1px solid var(--border);
+            font-size: 14px;
+        }
+
+        .text-right { text-align: right; }
+        .text-center { text-align: center; }
+
+        .totals-section {
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .totals-box {
+            width: 280px;
+        }
+
+        .total-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+        }
+
+        .grand-total {
+            margin-top: 10px;
+            padding: 12px 0;
+            border-top: 2px solid var(--primary);
+            font-weight: 700;
+            font-size: 18px;
+        }
+
+        .footer {
+            margin-top: 80px;
+            border-top: 1px solid var(--border);
+            padding-top: 20px;
+            font-size: 12px;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="page-container">
+
+    <!-- HEADER -->
+    <div class="header">
+        <div class="company-brand">
+            <h1 th:text="${poMainData.companyName}">Company</h1>
+            <p th:text="${poMainData.companyAddress}"></p>
+            <p th:text="${poMainData.email}"></p>
+        </div>
+        <div class="document-type">
+            <h2>Purchase Order</h2>
+        </div>
+    </div>
+
+    <!-- INFO -->
+    <div class="info-grid">
+
+        <div class="address-labels">
+
+            <!-- Vendor -->
+            <div>
+                <div class="section-title">Vendor</div>
+                <div class="address-text">
+                    <strong th:text="${poMainData.partyName}"></strong><br>
+                    <span th:text="${poMainData.partyAddress}"></span><br>
+                    <span th:text="${poMainData.contactPerson}"></span>
+                </div>
+            </div>
+
+            <!-- Ship To -->
+            <div>
+                <div class="section-title">Ship To</div>
+                <div class="address-text">
+                    <strong th:text="${poMainData.companyName}"></strong><br>
+                    <span th:text="${poMainData.shippingAddress}"></span><br>
+                    <span th:text="${poMainData.email}"></span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Order Details -->
+        <div>
+            <div class="section-title">Order Details</div>
+            <table class="meta-table">
+                <tr><td>PO Number</td><td th:text="${poMainData.documentNumber}"></td></tr>
+                <tr><td>Date Issued</td><td th:text="${poMainData.documentDate}"></td></tr>
+                <tr><td>Delivery Date</td><td th:text="${poMainData.deliveryDate}"></td></tr>
+                <tr><td>Payment Terms</td><td th:text="${poMainData.paymentTerms}"></td></tr>
+            </table>
+        </div>
+
+    </div>
+
+    <!-- ITEMS TABLE -->
+    <table class="items-table">
+        <thead>
+        <tr>
+            <th style="width:50%">Description</th>
+            <th class="text-center">Qty</th>
+            <th class="text-right">Unit Price</th>
+            <th class="text-right">Total</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        <tr th:each="item : ${itepoDetailsDatams}">
+            <td>
+                <strong th:text="${itpoDetailsDataem.product}"></strong><br>
+                <span th:text="${poDetailsData.description}"></span>
+            </td>
+            <td class="text-center" th:text="${poDetailsData.qty}"></td>
+            <td class="text-right" th:text="${poDetailsData.rate}"></td>
+            <td class="text-right" th:text="${poDetailsData.grossAmount}"></td>
+        </tr>
+        </tbody>
+    </table>
+
+    <!-- TOTALS -->
+    <div class="totals-section">
+        <div class="totals-box">
+            <div class="total-row">
+                <span>Subtotal</span>
+                <span th:text="${poDetailsData.grossAmount}"></span>
+            </div>
+            <div class="total-row">
+                <span>Estimated Tax</span>
+                <span th:text="${poDetailsData.taxAmount}"></span>
+            </div>
+            <div class="total-row grand-total">
+                <span>Total Amount</span>
+                <span th:text="${poDetailsData.netAmount}"></span>
+            </div>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <div class="footer">
+        <p>
+            <strong>Notes:</strong>
+            <span th:text="${notes}"></span>
+        </p>
+        <p style="margin-top:15px;">
+            <span th:text="${poMainData.companyName}"></span> |
+            <span th:text="${poMainData.companyName}"></span>
+        </p>
+    </div>
+
+</div>
+
+</body>
+</html>
