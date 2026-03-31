@@ -12,162 +12,180 @@
 }
 
 :root {
-    --primary: #1e293b;
-    --accent: #3b82f6;
-    --text-dark: #0f172a;
-    --text-muted: #64748b;
-    --border: #e2e8f0;
+    --primary:#1e293b;
+    --accent:#3b82f6;
+    --text-dark:#0f172a;
+    --text-muted:#64748b;
+    --border:#e2e8f0;
 }
 
-body {
-    background-color: #f8fafc;
-    font-family: 'Inter','Segoe UI', Helvetica, sans-serif;
-    margin: 0;
-    padding: 0;
-    color: var(--text-dark);
+body{
+    font-family:'Segoe UI', Arial, sans-serif;
+    margin:0;
+    padding:0;
+    background:#f8fafc;
+    color:var(--text-dark);
+    line-height:1.3;
 }
 
-.page-container {
-    background: #ffffff;
-    width: 210mm;
-    margin: auto;
-    padding: 18mm;
-    box-sizing: border-box;
+.page-container{
+    width:210mm;
+    margin:auto;
+    padding:18mm;
+    background:white;
+    box-sizing:border-box;
 }
 
 /* HEADER */
 
-.header {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 35px;
+.header{
+    display:flex;
+    justify-content:space-between;
+    margin-bottom:30px;
 }
 
-.company-brand h1 {
-    margin: 0;
-    font-size: 22px;
-    color: var(--primary);
+.company-brand h1{
+    margin:0;
+    font-size:22px;
+    color:var(--primary);
 }
 
-.company-brand p {
-    margin: 4px 0;
-    font-size: 13px;
-    color: var(--text-muted);
+.company-brand p{
+    margin:3px 0;
+    font-size:13px;
+    color:var(--text-muted);
 }
 
-.document-type h2 {
-    margin: 0;
-    font-size: 28px;
-    font-weight: 300;
-    color: var(--primary);
-    text-transform: uppercase;
+.document-type h2{
+    margin:0;
+    font-size:28px;
+    font-weight:300;
+    text-transform:uppercase;
 }
 
-/* INFO GRID */
+/* INFO SECTION */
 
-.info-grid {
-    display: grid;
-    grid-template-columns: 1.5fr 1fr;
-    gap: 40px;
-    margin-bottom: 40px;
+.info-grid{
+    display:flex;
+    justify-content:space-between;
+    gap:40px;
+    margin-bottom:35px;
 }
 
-.address-labels {
-    display: flex;
-    gap: 40px;
+.info-left{
+    width:60%;
 }
 
-.section-title {
-    font-size: 11px;
-    font-weight: 700;
-    text-transform: uppercase;
-    color: var(--accent);
-    margin-bottom: 10px;
-    border-bottom: 1px solid var(--border);
+.info-right{
+    width:40%;
 }
 
-.address-text {
-    font-size: 14px;
-    line-height: 1.6;
+.address-labels{
+    display:flex;
+    gap:40px;
 }
 
-.meta-table {
-    width: 100%;
-    font-size: 13px;
-    border-collapse: collapse;
+.section-title{
+    font-size:11px;
+    font-weight:700;
+    text-transform:uppercase;
+    color:var(--accent);
+    margin-bottom:8px;
+    border-bottom:1px solid var(--border);
 }
 
-.meta-table td {
-    padding: 6px 0;
-    border-bottom: 1px solid var(--border);
+.address-text{
+    font-size:14px;
 }
 
-.meta-table td:first-child {
-    font-weight: 600;
-    color: var(--text-muted);
+/* META TABLE */
+
+.meta-table{
+    width:100%;
+    font-size:13px;
+    border-collapse:collapse;
 }
 
-.meta-table td:last-child {
-    text-align: right;
+.meta-table td{
+    padding:6px 0;
+    border-bottom:1px solid var(--border);
+}
+
+.meta-table td:first-child{
+    font-weight:600;
+    color:var(--text-muted);
+}
+
+.meta-table td:last-child{
+    text-align:right;
 }
 
 /* ITEMS TABLE */
 
-.items-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-bottom: 35px;
+.items-table{
+    width:100%;
+    border-collapse:collapse;
+    margin-bottom:35px;
 }
 
-.items-table th {
-    padding: 12px 10px;
-    background: #f1f5f9;
-    font-size: 12px;
-    text-transform: uppercase;
+.items-table th{
+    padding:10px;
+    background:#f1f5f9;
+    font-size:12px;
+    text-transform:uppercase;
 }
 
-.items-table td {
-    padding: 14px 10px;
-    border-bottom: 1px solid var(--border);
-    font-size: 14px;
+.items-table td{
+    padding:10px;
+    border-bottom:1px solid var(--border);
+    font-size:14px;
 }
 
-.text-right { text-align: right; }
-.text-center { text-align: center; }
+.items-table tr{
+    page-break-inside:avoid;
+}
+
+.text-right{
+    text-align:right;
+}
+
+.text-center{
+    text-align:center;
+}
 
 /* TOTALS */
 
-.totals-section {
-    display: flex;
-    justify-content: flex-end;
+.totals-section{
+    display:flex;
+    justify-content:flex-end;
 }
 
-.totals-box {
-    width: 260px;
+.totals-box{
+    width:250px;
 }
 
-.total-row {
-    display: flex;
-    justify-content: space-between;
-    padding: 6px 0;
+.total-row{
+    display:flex;
+    justify-content:space-between;
+    padding:5px 0;
 }
 
-.grand-total {
-    margin-top: 8px;
-    padding: 10px 0;
-    border-top: 2px solid var(--primary);
-    font-weight: 700;
-    font-size: 18px;
+.grand-total{
+    margin-top:8px;
+    padding-top:8px;
+    border-top:2px solid var(--primary);
+    font-weight:bold;
+    font-size:18px;
 }
 
 /* FOOTER */
 
-.footer {
-    margin-top: 50px;
-    border-top: 1px solid var(--border);
-    padding-top: 15px;
-    font-size: 12px;
-    text-align: center;
+.footer{
+    margin-top:40px;
+    border-top:1px solid var(--border);
+    padding-top:12px;
+    text-align:center;
+    font-size:12px;
 }
 
 </style>
@@ -180,6 +198,7 @@ body {
 <!-- HEADER -->
 
 <div class="header">
+
 <div class="company-brand">
 <h1>{{poMainData.companyName}}</h1>
 <p>{{poMainData.companyAddress}}</p>
@@ -189,17 +208,21 @@ body {
 <div class="document-type">
 <h2>Purchase Order</h2>
 </div>
+
 </div>
 
 <!-- INFO SECTION -->
 
 <div class="info-grid">
 
+<div class="info-left">
+
 <div class="address-labels">
 
 <!-- Vendor -->
 
 <div>
+
 <div class="section-title">Vendor</div>
 
 <div class="address-text">
@@ -213,6 +236,7 @@ body {
 <!-- Ship To -->
 
 <div>
+
 <div class="section-title">Ship To</div>
 
 <div class="address-text">
@@ -225,9 +249,11 @@ body {
 
 </div>
 
-<!-- Order Details -->
+</div>
 
-<div>
+<!-- ORDER DETAILS -->
+
+<div class="info-right">
 
 <div class="section-title">Order Details</div>
 
@@ -281,8 +307,14 @@ body {
 <tr>
 
 <td>
-<strong>{{this.product}}</strong><br>
+
+<strong>{{this.product}}</strong>
+
+{{#if this.description}}
+<br>
 <span>{{this.description}}</span>
+{{/if}}
+
 </td>
 
 <td class="text-center">{{this.qty}}</td>
@@ -331,7 +363,7 @@ body {
 <span>{{notes}}</span>
 </p>
 
-<p style="margin-top:10px;">
+<p style="margin-top:8px;">
 {{poMainData.companyName}}
 </p>
 
