@@ -40,9 +40,7 @@ body{
 /* HEADER */
 
 .header{
-    display:flex;
-    justify-content:space-between;
-    align-items:flex-start;
+    text-align:center;
     margin-bottom:30px;
 }
 
@@ -59,7 +57,7 @@ body{
 }
 
 .document-title{
-    text-align:right;
+    margin-top:15px;
 }
 
 .document-title h2{
@@ -76,29 +74,23 @@ body{
 /* INFO GRID */
 
 .info-grid{
-    display:flex;
-    justify-content:space-between;
-    gap:40px;
+    width:100%;
     margin-bottom:35px;
-}
-
-.info-left{
-    flex:2;
-}
-
-.info-right{
-    flex:1;
 }
 
 /* ADDRESS BLOCKS */
 
 .address-wrapper{
-    display:flex;
-    gap:40px;
+    width:100%;
+}
+
+.address-table{
+    width:100%;
 }
 
 .address-box{
-    flex:1;
+    vertical-align:top;
+    padding-right:20px;
 }
 
 .section-title{
@@ -190,29 +182,24 @@ thead{
 /* TOTALS */
 
 .totals-section{
-    display:flex;
-    justify-content:flex-end;
+    width:100%;
 }
 
-.totals-box{
+.totals-table{
     width:280px;
+    margin-left:auto;
     border:1px solid var(--border);
-    padding:15px;
     background:#fcfcfc;
 }
 
-.total-row{
-    display:flex;
-    justify-content:space-between;
-    margin-bottom:6px;
-    font-size:14px;
+.totals-table td{
+    padding:8px 12px;
 }
 
-.grand-total{
+.totals-table tr:last-child{
     border-top:2px solid var(--primary);
-    padding-top:8px;
     font-weight:bold;
-    font-size:18px;
+    font-size:16px;
 }
 
 /* NOTES */
@@ -268,11 +255,12 @@ thead{
 
 <div class="info-grid">
 
-<div class="info-left">
+<table class="address-table">
 
-<div class="address-wrapper">
+<tr>
 
-<div class="address-box">
+<td class="address-box" width="50%">
+
 <div class="section-title">Vendor</div>
 
 <div class="address-text">
@@ -280,9 +268,11 @@ thead{
 {{poMainData.partyAddress}}<br>
 {{poMainData.contactPerson}}
 </div>
-</div>
 
-<div class="address-box">
+</td>
+
+<td class="address-box" width="50%">
+
 <div class="section-title">Ship To</div>
 
 <div class="address-text">
@@ -290,13 +280,14 @@ thead{
 {{poMainData.shippingAddress}}<br>
 {{poMainData.email}}
 </div>
-</div>
 
-</div>
+</td>
 
-</div>
+</tr>
 
-<div class="info-right">
+</table>
+
+<br>
 
 <div class="section-title">Order Details</div>
 
@@ -323,8 +314,6 @@ thead{
 </tr>
 
 </table>
-
-</div>
 
 </div>
 
@@ -375,24 +364,24 @@ thead{
 
 <div class="totals-section">
 
-<div class="totals-box">
+<table class="totals-table">
 
-<div class="total-row">
-<span>Subtotal</span>
-<span>{{poMainData.grossAmount}}</span>
-</div>
+<tr>
+<td>Subtotal</td>
+<td class="text-right">{{poMainData.grossAmount}}</td>
+</tr>
 
-<div class="total-row">
-<span>Estimated Tax</span>
-<span>{{poMainData.taxAmount}}</span>
-</div>
+<tr>
+<td>Estimated Tax</td>
+<td class="text-right">{{poMainData.taxAmount}}</td>
+</tr>
 
-<div class="total-row grand-total">
-<span>Total Amount</span>
-<span>{{poMainData.totalAmount}}</span>
-</div>
+<tr>
+<td>Total Amount</td>
+<td class="text-right">{{poMainData.totalAmount}}</td>
+</tr>
 
-</div>
+</table>
 
 </div>
 
