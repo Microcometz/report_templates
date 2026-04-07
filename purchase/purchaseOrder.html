@@ -10,219 +10,133 @@
     margin:20mm;
 }
 
-:root{
-    --primary:#1e293b;
-    --accent:#2563eb;
-    --light:#f8fafc;
-    --border:#e5e7eb;
-    --text-muted:#6b7280;
-}
-
 body{
-    font-family:'Segoe UI', Arial, sans-serif;
+    font-family:Arial, Helvetica, sans-serif;
     margin:0;
-    color:#111827;
-    line-height:1.45;
-}
-
-.page-container{
-    width:100%;
-}
-
-/* TOP BAR */
-
-.top-bar{
-    height:6px;
-    background:var(--accent);
-    margin-bottom:25px;
+    color:#222;
 }
 
 /* HEADER */
 
-.header{
+.header-table{
+    border-bottom:4px solid #333;
+    margin-bottom:25px;
+}
+
+.company-logo{
+    font-size:18px;
+    font-weight:bold;
+}
+
+.title{
     text-align:center;
-    margin-bottom:30px;
 }
 
-.company h1{
+.title h1{
     margin:0;
-    font-size:24px;
-    letter-spacing:.4px;
-}
-
-.company p{
-    margin:3px 0;
-    font-size:13px;
-    color:var(--text-muted);
-}
-
-.document-title{
-    margin-top:15px;
-}
-
-.document-title h2{
-    margin:0;
-    font-size:30px;
     letter-spacing:2px;
 }
 
-.document-title span{
-    font-size:13px;
-    color:var(--text-muted);
+.title h2{
+    margin:5px 0 0 0;
+    font-weight:normal;
+    letter-spacing:2px;
 }
 
-/* INFO GRID */
-
-.info-grid{
-    width:100%;
-    margin-bottom:35px;
-}
-
-/* ADDRESS BLOCKS */
-
-.address-wrapper{
-    width:100%;
-}
+/* ADDRESS SECTION */
 
 .address-table{
-    width:100%;
-}
-
-.address-box{
-    vertical-align:top;
-    padding-right:20px;
+    margin-bottom:20px;
 }
 
 .section-title{
-    font-size:11px;
-    font-weight:700;
+    font-size:12px;
+    font-weight:bold;
     text-transform:uppercase;
-    letter-spacing:.6px;
-    color:var(--accent);
-    margin-bottom:8px;
+    margin-bottom:5px;
 }
 
 .address-text{
-    font-size:14px;
+    font-size:13px;
+    line-height:1.4;
 }
 
-/* META TABLE */
+/* ORDER META */
 
 .meta-table{
-    width:100%;
     border-collapse:collapse;
-    font-size:13px;
+    margin-bottom:20px;
 }
 
 .meta-table td{
-    padding:7px 0;
-    border-bottom:1px solid var(--border);
+    padding:6px;
+    border:1px solid #ccc;
 }
 
 .meta-table td:first-child{
-    font-weight:600;
-    color:var(--text-muted);
-}
-
-.meta-table td:last-child{
-    text-align:right;
+    font-weight:bold;
 }
 
 /* ITEMS TABLE */
 
 .items-table{
-    width:100%;
     border-collapse:collapse;
-    table-layout:fixed;
-    margin-bottom:35px;
-}
-
-thead{
-    display:table-header-group;
+    margin-bottom:25px;
 }
 
 .items-table th{
-    padding:12px;
-    background:var(--light);
+    border:1px solid #333;
+    background:#444;
+    color:#fff;
     font-size:12px;
+    padding:8px;
     text-transform:uppercase;
-    letter-spacing:.5px;
-    border-bottom:2px solid var(--border);
 }
 
 .items-table td{
-    padding:12px;
-    border-bottom:1px solid var(--border);
-    font-size:14px;
-}
-
-.items-table tr{
-    page-break-inside:avoid;
-}
-
-.items-table tr:nth-child(even){
-    background:#fafafa;
-}
-
-/* COLUMN WIDTHS */
-
-.items-table th:nth-child(1){width:50%;}
-.items-table th:nth-child(2){width:12%;}
-.items-table th:nth-child(3){width:18%;}
-.items-table th:nth-child(4){width:20%;}
-
-.text-right{
-    text-align:right;
+    border:1px solid #ccc;
+    padding:8px;
+    font-size:13px;
 }
 
 .text-center{
     text-align:center;
 }
 
-/* TOTALS */
-
-.totals-section{
-    width:100%;
+.text-right{
+    text-align:right;
 }
 
+/* TOTALS */
+
 .totals-table{
-    width:280px;
-    margin-left:auto;
-    border:1px solid var(--border);
-    background:#fcfcfc;
+    border-collapse:collapse;
 }
 
 .totals-table td{
-    padding:8px 12px;
+    padding:8px;
+    border:1px solid #ccc;
 }
 
-.totals-table tr:last-child{
-    border-top:2px solid var(--primary);
+.total-label{
+    background:#444;
+    color:#fff;
+    font-weight:bold;
+}
+
+.grand-total{
     font-weight:bold;
     font-size:16px;
-}
-
-/* NOTES */
-
-.notes{
-    margin-top:40px;
-    font-size:13px;
-}
-
-.notes strong{
-    display:block;
-    margin-bottom:5px;
 }
 
 /* FOOTER */
 
 .footer{
-    margin-top:40px;
-    border-top:1px solid var(--border);
-    padding-top:12px;
-    font-size:12px;
+    margin-top:30px;
+    border-top:1px solid #ccc;
+    padding-top:10px;
     text-align:center;
-    color:var(--text-muted);
+    font-size:12px;
 }
 
 </style>
@@ -230,36 +144,41 @@ thead{
 
 <body>
 
-<div class="page-container">
-
-<div class="top-bar"></div>
-
 <!-- HEADER -->
 
-<div class="header">
+<table class="header-table">
 
-<div class="company">
-<h1>{{poMainData.companyName}}</h1>
-<p>{{poMainData.companyAddress}}</p>
-<p>{{poMainData.email}}</p>
-</div>
+<tr>
 
-<div class="document-title">
-<h2>PURCHASE ORDER</h2>
-<span>{{poMainData.documentNumber}}</span>
-</div>
+<td>
+<strong>{{poMainData.companyName}}</strong><br>
+{{poMainData.companyAddress}}<br>
+{{poMainData.email}}
+</td>
 
-</div>
+<td class="title">
+<h1>PURCHASE</h1>
+<h2>ORDER</h2>
+</td>
 
-<!-- INFO SECTION -->
+<td style="text-align:right">
 
-<div class="info-grid">
+<strong>PO NUMBER</strong><br>
+{{poMainData.documentNumber}}
+
+</td>
+
+</tr>
+
+</table>
+
+<!-- ADDRESS -->
 
 <table class="address-table">
 
 <tr>
 
-<td class="address-box" width="50%">
+<td>
 
 <div class="section-title">Vendor</div>
 
@@ -271,7 +190,7 @@ thead{
 
 </td>
 
-<td class="address-box" width="50%">
+<td>
 
 <div class="section-title">Ship To</div>
 
@@ -283,51 +202,48 @@ thead{
 
 </td>
 
-</tr>
-
-</table>
-
-<br>
+<td>
 
 <div class="section-title">Order Details</div>
 
 <table class="meta-table">
 
 <tr>
-<td>PO Number</td>
-<td>{{poMainData.documentNumber}}</td>
-</tr>
-
-<tr>
-<td>Date Issued</td>
+<td>Date</td>
 <td>{{poMainData.documentDate}}</td>
 </tr>
 
 <tr>
-<td>Delivery Date</td>
+<td>Delivery</td>
 <td>{{poMainData.deliveryDate}}</td>
 </tr>
 
 <tr>
-<td>Payment Terms</td>
+<td>Terms</td>
 <td>{{poMainData.paymentTerms}}</td>
 </tr>
 
 </table>
 
-</div>
+</td>
 
-<!-- ITEMS TABLE -->
+</tr>
+
+</table>
+
+<!-- ITEMS -->
 
 <table class="items-table">
 
 <thead>
+
 <tr>
 <th>Description</th>
-<th class="text-center">Qty</th>
-<th class="text-right">Unit Price</th>
-<th class="text-right">Total</th>
+<th>Qty</th>
+<th>Unit Price</th>
+<th>Total</th>
 </tr>
+
 </thead>
 
 <tbody>
@@ -337,19 +253,20 @@ thead{
 <tr>
 
 <td>
+
 <strong>{{this.product}}</strong>
 
 {{#if this.description}}
 <br>
-<span style="font-size:12px;color:#6b7280;">
 {{this.description}}
-</span>
 {{/if}}
 
 </td>
 
 <td class="text-center">{{this.qty}}</td>
+
 <td class="text-right">{{this.rate}}</td>
+
 <td class="text-right">{{this.grossAmount}}</td>
 
 </tr>
@@ -362,33 +279,29 @@ thead{
 
 <!-- TOTALS -->
 
-<div class="totals-section">
-
 <table class="totals-table">
 
 <tr>
-<td>Subtotal</td>
+<td class="total-label">Subtotal</td>
 <td class="text-right">{{poMainData.grossAmount}}</td>
 </tr>
 
 <tr>
-<td>Estimated Tax</td>
+<td class="total-label">Tax</td>
 <td class="text-right">{{poMainData.taxAmount}}</td>
 </tr>
 
-<tr>
-<td>Total Amount</td>
+<tr class="grand-total">
+<td class="total-label">TOTAL</td>
 <td class="text-right">{{poMainData.totalAmount}}</td>
 </tr>
 
 </table>
 
-</div>
-
 <!-- NOTES -->
 
-<div class="notes">
-<strong>Notes</strong>
+<div style="margin-top:20px">
+<strong>Notes</strong><br>
 {{notes}}
 </div>
 
@@ -396,8 +309,6 @@ thead{
 
 <div class="footer">
 {{poMainData.companyName}}
-</div>
-
 </div>
 
 </body>
