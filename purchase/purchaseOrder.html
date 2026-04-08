@@ -11,7 +11,7 @@
 }
 
 body{
-    font-family:Arial, Helvetica, sans-serif;
+    font-family: Arial, Helvetica, sans-serif;
     margin:0;
     color:#222;
 }
@@ -19,13 +19,15 @@ body{
 /* HEADER */
 
 .header-table{
+    width:100%;
+    border-collapse:collapse;
     border-bottom:4px solid #333;
     margin-bottom:25px;
 }
 
-.company-logo{
-    font-size:18px;
-    font-weight:bold;
+.header-table td{
+    vertical-align:top;
+    padding:5px;
 }
 
 .title{
@@ -46,7 +48,14 @@ body{
 /* ADDRESS SECTION */
 
 .address-table{
+    width:100%;
+    border-collapse:collapse;
     margin-bottom:20px;
+}
+
+.address-table td{
+    vertical-align:top;
+    padding:10px;
 }
 
 .section-title{
@@ -61,16 +70,17 @@ body{
     line-height:1.4;
 }
 
-/* ORDER META */
+/* META TABLE */
 
 .meta-table{
+    width:100%;
     border-collapse:collapse;
-    margin-bottom:20px;
 }
 
 .meta-table td{
     padding:6px;
     border:1px solid #ccc;
+    font-size:13px;
 }
 
 .meta-table td:first-child{
@@ -80,14 +90,15 @@ body{
 /* ITEMS TABLE */
 
 .items-table{
+    width:100%;
     border-collapse:collapse;
     margin-bottom:25px;
 }
 
 .items-table th{
     border:1px solid #333;
-    background:#444;
-    color:#fff;
+    background-color:#444;
+    color:#ffffff;
     font-size:12px;
     padding:8px;
     text-transform:uppercase;
@@ -109,8 +120,14 @@ body{
 
 /* TOTALS */
 
+.totals-wrapper{
+    width:100%;
+}
+
 .totals-table{
+    width:300px;
     border-collapse:collapse;
+    margin-left:auto;
 }
 
 .totals-table td{
@@ -119,14 +136,21 @@ body{
 }
 
 .total-label{
-    background:#444;
-    color:#fff;
+    background-color:#444;
+    color:#ffffff;
     font-weight:bold;
 }
 
 .grand-total{
     font-weight:bold;
     font-size:16px;
+}
+
+/* NOTES */
+
+.notes{
+    margin-top:20px;
+    font-size:13px;
 }
 
 /* FOOTER */
@@ -139,7 +163,18 @@ body{
     font-size:12px;
 }
 
+/* PDF RENDERING SAFETY */
+
+thead{
+    display:table-header-group;
+}
+
+tr{
+    page-break-inside:avoid;
+}
+
 </style>
+
 </head>
 
 <body>
@@ -151,14 +186,18 @@ body{
 <tr>
 
 <td>
+
 <strong>{{poMainData.companyName}}</strong><br>
 {{poMainData.companyAddress}}<br>
 {{poMainData.email}}
+
 </td>
 
 <td class="title">
+
 <h1>PURCHASE</h1>
 <h2>ORDER</h2>
+
 </td>
 
 <td style="text-align:right">
@@ -238,10 +277,10 @@ body{
 <thead>
 
 <tr>
-<th>Description</th>
-<th>Qty</th>
-<th>Unit Price</th>
-<th>Total</th>
+<th width="40%">Description</th>
+<th width="15%">Qty</th>
+<th width="20%">Unit Price</th>
+<th width="25%">Total</th>
 </tr>
 
 </thead>
@@ -263,11 +302,17 @@ body{
 
 </td>
 
-<td class="text-center">{{this.qty}}</td>
+<td class="text-center">
+{{this.qty}}
+</td>
 
-<td class="text-right">{{this.rate}}</td>
+<td class="text-right">
+{{this.rate}}
+</td>
 
-<td class="text-right">{{this.grossAmount}}</td>
+<td class="text-right">
+{{this.grossAmount}}
+</td>
 
 </tr>
 
@@ -278,6 +323,8 @@ body{
 </table>
 
 <!-- TOTALS -->
+
+<div class="totals-wrapper">
 
 <table class="totals-table">
 
@@ -298,17 +345,23 @@ body{
 
 </table>
 
+</div>
+
 <!-- NOTES -->
 
-<div style="margin-top:20px">
+<div class="notes">
+
 <strong>Notes</strong><br>
 {{notes}}
+
 </div>
 
 <!-- FOOTER -->
 
 <div class="footer">
+
 {{poMainData.companyName}}
+
 </div>
 
 </body>
