@@ -2,86 +2,89 @@
 <html>
 <head>
 <meta charset="UTF-8">
+
 <style>
-    body {
-        font-family: 'Courier New', Courier, monospace; /* Classic POS font */
-        font-size: 11px;
-        text-transform: uppercase; /* The receipt uses all caps for items */
-    }
 
-
-    /* Table Setup */
-    table {
-        width: 100%;
-        border-collapse: collapse;
-        margin-bottom: 5px;
-    }
-
-    .center{
-
-    text-align:center;
-
+body{
+    font-family:'Courier New', Courier, monospace;
+    font-size:11px;
+    text-transform:uppercase;
+    margin-left:3mm;
+    margin-right:3mm;
 }
 
-    /* Header Styling */
-    .header-table th {
-        font-weight: normal;
-        border-bottom: 1px solid #000;
-        padding-bottom: 5px;
-        font-size: 10px;
-    }
+/* Table Setup */
 
-    /* Item Styling */
-    .item-name {
-        padding-top: 8px;
-        font-weight: bold;
-        display: block;
-    }
-    
-    .arabic-name {
-        display: block;
-        direction: rtl;
-        font-size: 10px;
-        margin-bottom: 4px;
-    }
+table{
+    width:100%;
+    border-collapse:collapse;
+    margin-bottom:5px;
+}
 
-    .item-values td {
-        padding-bottom: 8px;
-    }
+.center{
+    text-align:center;
+}
 
-    /* Alignment */
-    .right { text-align: right; }
-    .center { text-align: center; }
-    .left { text-align: left; }
+.left{
+    text-align:left;
+}
 
-    /* Totals Section */
-    .totals-table {
-        margin-top: 10px;
-        border-top: 1px solid #000;
-        padding-top: 5px;
-    }
+.right{
+    text-align:right;
+}
 
-    .totals-table td {
-        padding: 2px 0;
-    }
+/* Header */
 
-    .footer {
-        text-align: center;
-        margin-top: 15px;
-        font-size: 12px;
-    }
+.header-table th{
+    font-weight:normal;
+    border-bottom:1px solid #000;
+    padding-bottom:5px;
+    font-size:10px;
+}
+
+/* Item */
+
+.item-name{
+    padding-top:8px;
+    font-weight:bold;
+    display:block;
+}
+
+.item-values td{
+    padding-bottom:8px;
+}
+
+/* Totals */
+
+.totals-table{
+    margin-top:10px;
+    border-top:1px solid #000;
+    padding-top:5px;
+}
+
+.totals-table td{
+    padding:2px 0;
+}
+
+.footer{
+    text-align:center;
+    margin-top:15px;
+    font-size:12px;
+}
+
+.line{
+    border-top:1px dashed #000;
+    margin:6px 0;
+}
+
 </style>
 </head>
 
 <body>
 
-    <div class="receipt">
-
-
+<div class="receipt">
 
 <!-- Company Header -->
-
-
 
 <div class="center">
 
@@ -93,15 +96,9 @@ Phone: {{invoiceMainData.companyPhone}}
 
 </div>
 
-
-
 <div class="line"></div>
 
-
-
 <!-- Invoice Info -->
-
-
 
 <div>
 
@@ -115,63 +112,95 @@ Phone : {{invoiceMainData.mobile}}
 
 </div>
 
-
-
 <div class="line"></div>
 
 
+<table>
 
-<div class="receipt">
+<tr class="header-table">
+    <th class="left" width="18%">QTY</th>
+    <th class="right" width="20%">RATE</th>
+    <th class="right" width="20%">GROSS</th>
+    <th class="right" width="20%">DISC</th>
+    <th class="right" width="22%">N.TOTAL</th>
+</tr>
 
-    <table>
-        <tr class="header-table">
-            <th class="left" width="15%">QTY</th>
-            <th class="right" width="20%">RATE<br></th>
-            <th class="right" width="20%">GROSS</th>
-            <th class="right" width="20%">DISC</th>
-            <th class="right" width="25%">N.TOTAL</th>
-        </tr>
+{{#each invoiceDetailsData}}
 
-        {{#each invoiceDetailsData}}
-        <tr>
-            <td colspan="5">
-                <span class="item-name">{{this.product}}</span>
-               
-            </td>
-        </tr>
-        <tr class="item-values">
-            <td class="left">{{this.qty}} Pcs</td>
-            <td class="right">{{this.rate}}</td>
-            <td class="right">{{this.grossAmount}}</td>
-            <td class="right">{{this.discount}}</td>
-            <td class="right">{{this.netAmount}}</td>
-        </tr>
-        {{/each}}
-    </table>
+<tr>
+<td colspan="5">
+<span class="item-name">{{this.product}}</span>
+</td>
+</tr>
 
-    <table class="totals-table">
-        <tr>
-            <td class="right" style="width: 70%;">Gross Total -</td>
-            <td class="right">{{invoiceMainData.grossAmount}}</td>
-        </tr>
-        <tr>
-            <td class="right">(-)Item Discount - </td>
-            <td class="right">{{invoiceMainData.discount}}</td>
-        </tr>
-        <tr>
-            <td class="right">(-)Invoice Discount - </td>
-            <td class="right">{{invoiceMainData.invoiceDiscount}}</td>
-        </tr>
-        <tr style="font-size: 13px; font-weight: bold;">
-            <td class="right">(=) Net Amount - </td>
-            <td class="right">{{invoiceMainData.invoiceTotal}}</td>
-        </tr>
-    </table>
+<tr class="item-values">
 
-    <div class="footer">
-        Thank you for shopping with us<br>
-        VISIT AGAIN!
-    </div>
+<td class="left">
+{{#if this.qty}}{{this.qty}}{{else}}0{{/if}} PCS
+</td>
+
+<td class="right">
+{{#if this.rate}}{{this.rate}}{{else}}0.00{{/if}}
+</td>
+
+<td class="right">
+{{#if this.grossAmount}}{{this.grossAmount}}{{else}}0.00{{/if}}
+</td>
+
+<td class="right">
+{{#if this.discount}}{{this.discount}}{{else}}0.00{{/if}}
+</td>
+
+<td class="right">
+{{#if this.netAmount}}{{this.netAmount}}{{else}}0.00{{/if}}
+</td>
+
+</tr>
+
+{{/each}}
+
+</table>
+
+
+<table class="totals-table">
+
+<tr>
+<td class="right" style="width:70%;">Gross Total -</td>
+<td class="right">
+{{#if invoiceMainData.grossAmount}}{{invoiceMainData.grossAmount}}{{else}}0.00{{/if}}
+</td>
+</tr>
+
+<tr>
+<td class="right">(-) Item Discount -</td>
+<td class="right">
+{{#if invoiceMainData.discount}}{{invoiceMainData.discount}}{{else}}0.00{{/if}}
+</td>
+</tr>
+
+<tr>
+<td class="right">(-) Invoice Discount -</td>
+<td class="right">
+{{#if invoiceMainData.invoiceDiscount}}{{invoiceMainData.invoiceDiscount}}{{else}}0.00{{/if}}
+</td>
+</tr>
+
+<tr style="font-size:13px;font-weight:bold;">
+<td class="right">(=) Net Amount -</td>
+<td class="right">
+{{#if invoiceMainData.invoiceTotal}}{{invoiceMainData.invoiceTotal}}{{else}}0.00{{/if}}
+</td>
+</tr>
+
+</table>
+
+
+<div class="footer">
+
+Thank you for shopping with us<br>
+VISIT AGAIN!
+
+</div>
 
 </div>
 
