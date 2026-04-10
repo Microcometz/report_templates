@@ -27,7 +27,7 @@ body{
 
 .header-table td{
     vertical-align:top;
-    padding:5px;
+    padding:15px;
 }
 
 .title{
@@ -184,6 +184,12 @@ tr{
 <table class="header-table">
 
 <tr>
+<td colspan="2" class="title">
+<h1>PURCHASE ORDER</h1>
+</td>
+</tr>
+
+<tr>
 
 <td>
 
@@ -193,17 +199,18 @@ tr{
 
 </td>
 
-<td class="title">
-
-<h1>PURCHASE</h1>
-<h2>ORDER</h2>
-
-</td>
-
 <td style="text-align:right">
 
-<strong>PO NUMBER</strong><br>
+<strong>PO NUMBER:</strong>
 {{poMainData.documentNumber}}
+<br>
+
+<div style="padding-right:86px">
+
+<strong>Date:</strong>
+{{poMainData.documentDate}}
+
+</div>
 
 </td>
 
@@ -248,17 +255,17 @@ tr{
 <table class="meta-table">
 
 <tr>
-<td>Date</td>
-<td>{{poMainData.documentDate}}</td>
+<td>Shipment Terms</td>
+<td>{{poMainData.shipmentTerms}}</td>
 </tr>
 
 <tr>
-<td>Delivery</td>
-<td>{{poMainData.deliveryDate}}</td>
+<td>Delivery Terms</td>
+<td>{{poMainData.deliveryTerms}}</td>
 </tr>
 
 <tr>
-<td>Terms</td>
+<td>Payment Terms</td>
 <td>{{poMainData.paymentTerms}}</td>
 </tr>
 
@@ -347,16 +354,7 @@ tr{
 
 </div>
 
-<!-- NOTES -->
 
-<div class="notes">
-
-<strong>Notes</strong><br>
-{{notes}}
-
-</div>
-
-<!-- FOOTER -->
 
 <div class="footer">
 
