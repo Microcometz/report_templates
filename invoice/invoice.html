@@ -5,149 +5,223 @@
 
 <style>
 
-/* PDF PAGE CONTROL */
+/* PAGE SETTINGS */
 @page {
-    size: 76.2mm auto;
+    size: 76.2mm 1000mm;
     margin: 0;
 }
 
 /* BODY */
-body {
-    width: 76.2mm;
-    margin: 0;
-    font-family: 'Courier New', Courier, monospace;
-    font-size: 11px;
-    text-transform: uppercase;
-}
-
-/* RECEIPT CONTAINER */
-.receipt {
-    width: 100%;
-}
-
-/* DIVIDER LINE */
-.line{
-    border-top:1px dashed #000;
-    margin:6px 0;
-}
-
-/* TABLE SETUP */
-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-bottom: 5px;
-}
-
-/* PREVENT PAGE SPLITS */
-table, tr, td {
-    page-break-inside: avoid;
+body{
+    width:76.2mm;
+    margin:0;
+    font-family:'Courier New', Courier, monospace;
+    font-size:11px;
+    text-transform:uppercase;
 }
 
 /* ALIGNMENT */
-.right { text-align: right; }
-.center { text-align: center; }
-.left { text-align: left; }
+.left{ text-align:left; }
+.right{ text-align:right; }
+.center{ text-align:center; }
+
+/* RECEIPT */
+.receipt{
+    width:100%;
+}
+
+/* COMPANY HEADER */
+.company-name{
+    font-size:14px;
+    font-weight:bold;
+}
+
+.company-address{
+    font-size:11px;
+}
+
+.company-phone{
+    font-size:11px;
+}
+
+/* INVOICE INFO */
+.invoice-info{
+    border-top:1px dashed #000;
+    border-bottom:1px dashed #000;
+    padding:6px 0;
+    margin:6px 0;
+}
+
+.invoice-info div{
+    word-break:break-word;
+}
+
+/* ITEM NAME LABEL */
+.item-label{
+    font-size:11px;
+    font-weight:bold;
+    margin-top:6px;
+}
+
+/* TABLE */
+table{
+    width:100%;
+    border-collapse:collapse;
+}
+
+.items-table{
+    margin-top:3px;
+}
 
 /* HEADER ROW */
-.header-table th {
-    font-weight: normal;
-    border-bottom: 1px solid #000;
-    padding-bottom: 5px;
-    font-size: 10px;
+.header-row th{
+    font-size:10px;
+    font-weight:normal;
+    border-bottom:1px solid #000;
+    padding-bottom:3px;
 }
 
-/* ITEM NAME */
-.item-name {
-    padding-top: 8px;
-    font-weight: bold;
-    display: block;
+/* PRODUCT NAME ROW */
+.product-name{
+    padding-top:6px;
+    font-weight:bold;
+    word-break:break-word;
 }
 
-/* ARABIC SUPPORT */
-.arabic-name {
-    display: block;
-    direction: rtl;
-    font-size: 10px;
-    margin-bottom: 4px;
+/* VALUE ROW */
+.value-row td{
+    padding-bottom:6px;
 }
 
-/* ITEM VALUE ROW */
-.item-values td {
-    padding-bottom: 8px;
+/* PREVENT PAGE BREAK INSIDE */
+table, tr, td{
+    page-break-inside:avoid;
 }
 
-/* TOTALS SECTION */
-.totals-table {
-    margin-top: 10px;
-    border-top: 1px solid #000;
-    padding-top: 5px;
+/* TOTALS */
+.totals-table{
+    margin-top:8px;
+    border-top:1px solid #000;
 }
 
-.totals-table td {
-    padding: 2px 0;
+.totals-table td{
+    padding:3px 0;
+}
+
+.total-final{
+    font-size:14px;
+    font-weight:bold;
 }
 
 /* FOOTER */
-.footer {
-    text-align: center;
-    margin-top: 15px;
-    font-size: 12px;
+.footer{
+    text-align:center;
+    margin-top:12px;
+    font-size:12px;
 }
 
 </style>
+
 </head>
 
 <body>
 
 <div class="receipt">
 
-<!-- Company Header -->
+<!-- COMPANY HEADER -->
 
 <div class="center">
-<b>{{invoiceMainData.companyName}}</b><br>
-{{invoiceMainData.companyAddress}}<br>
+
+<div class="company-name">
+{{invoiceMainData.companyName}}
+</div>
+
+<div class="company-address">
+{{invoiceMainData.companyAddress}}
+</div>
+
+<div class="company-phone">
 Phone: {{invoiceMainData.companyPhone}}
 </div>
 
-
-
-<!-- Invoice Info -->
-
-<div>
-Date : {{invoiceMainData.docDate}} <br>
-Invoice : {{invoiceMainData.docCode}} <br>
-Customer : {{invoiceMainData.customer}} <br>
-Phone : {{invoiceMainData.mobile}}
 </div>
 
+<!-- INVOICE INFO -->
 
+<div class="invoice-info">
 
-<!-- ITEM TABLE -->
+<div>Date : {{invoiceMainData.docDate}}</div>
 
-<table>
+<div>Invoice : {{invoiceMainData.docCode}}</div>
 
-<tr class="header-table">
-    <th class="left" width="15%">QTY</th>
-    <th class="right" width="20%">RATE</th>
-    <th class="right" width="20%">GROSS</th>
-    <th class="right" width="20%">DISC</th>
-    <th class="right" width="25%">N.TOTAL</th>
+<div>Customer : {{invoiceMainData.customer}}</div>
+
+<div>Phone : {{invoiceMainData.mobile}}</div>
+
+</div>
+
+<!-- ITEM LABEL -->
+
+<div class="item-label">
+ITEM NAME
+</div>
+
+<!-- ITEMS TABLE -->
+
+<table class="items-table">
+
+<tr class="header-row">
+
+<th class="left" width="15%">QTY</th>
+
+<th class="left" width="15%">UNIT</th>
+
+<th class="right" width="20%">RATE</th>
+
+<th class="right" width="20%">GROSS</th>
+
+<th class="right" width="15%">DISC</th>
+
+<th class="right" width="15%">N.TOTAL</th>
+
 </tr>
 
 {{#each invoiceDetailsData}}
 
 <tr>
-<td colspan="5">
-<span class="item-name">{{this.product}}</span>
+
+<td colspan="6" class="product-name">
+{{this.product}}
 </td>
+
 </tr>
 
-<tr class="item-values">
-<td class="left">{{this.qty}} PCS</td>
-<td class="right">{{this.rate}}</td>
-<td class="right">{{this.grossAmount}}</td>
-<td class="right">{{this.discount}}</td>
-<td class="right">{{this.netAmount}}</td>
+<tr class="value-row">
+
+<td class="left">
+{{this.qty}}
+</td>
+
+<td class="left">
+PCS
+</td>
+
+<td class="right">
+{{this.rate}}
+</td>
+
+<td class="right">
+{{this.grossAmount}}
+</td>
+
+<td class="right">
+{{this.discount}}
+</td>
+
+<td class="right">
+{{this.netAmount}}
+</td>
+
 </tr>
 
 {{/each}}
@@ -159,23 +233,51 @@ Phone : {{invoiceMainData.mobile}}
 <table class="totals-table">
 
 <tr>
-<td class="right" style="width:70%;">GROSS TOTAL -</td>
-<td class="right">{{invoiceMainData.grossAmount}}</td>
+
+<td class="right" style="width:70%">
+Gross Total
+</td>
+
+<td class="right">
+{{invoiceMainData.grossAmount}}
+</td>
+
 </tr>
 
 <tr>
-<td class="right">(-) ITEM DISCOUNT -</td>
-<td class="right">{{invoiceMainData.discount}}</td>
+
+<td class="right">
+Item Discount
+</td>
+
+<td class="right">
+{{invoiceMainData.discount}}
+</td>
+
 </tr>
 
 <tr>
-<td class="right">(-) INVOICE DISCOUNT -</td>
-<td class="right">{{invoiceMainData.invoiceDiscount}}</td>
+
+<td class="right">
+Invoice Discount
+</td>
+
+<td class="right">
+{{invoiceMainData.invoiceDiscount}}
+</td>
+
 </tr>
 
-<tr style="font-size:13px;font-weight:bold;">
-<td class="right">(=) NET AMOUNT -</td>
-<td class="right">{{invoiceMainData.invoiceTotal}}</td>
+<tr class="total-final">
+
+<td class="right">
+NET AMOUNT
+</td>
+
+<td class="right">
+{{invoiceMainData.invoiceTotal}}
+</td>
+
 </tr>
 
 </table>
@@ -183,8 +285,11 @@ Phone : {{invoiceMainData.mobile}}
 <!-- FOOTER -->
 
 <div class="footer">
-THANK YOU FOR SHOPPING WITH US<br>
+
+Thank you for shopping with us<br>
+
 VISIT AGAIN!
+
 </div>
 
 </div>
