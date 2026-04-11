@@ -2,21 +2,6 @@
 <html>
 <head>
 <meta charset="UTF-8">
-</head>
-
-<body>
-
-<div class="receipt">
-
-{{> pos-header
-companyName=invoiceMainData.companyName
-companyAddress=invoiceMainData.companyAddress
-docDate=invoiceMainData.docDate
-docCode=invoiceMainData.docCode
-customer=invoiceMainData.customer
-}}
-
-<!-- BODY CONTENT -->
 
 <style>
 
@@ -65,7 +50,21 @@ padding:2px 0;
 }
 
 </style>
+</head>
 
+<body>
+
+<div class="receipt">
+
+{{> pos-header
+companyName=invoiceMainData.companyName
+companyAddress=invoiceMainData.companyAddress
+docDate=invoiceMainData.docDate
+docCode=invoiceMainData.docCode
+customer=invoiceMainData.customer
+}}
+
+<!-- BODY CONTENT -->
 
 <table>
 
