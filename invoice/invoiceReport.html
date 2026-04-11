@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Sales Invoice</title>
+
+<style>
+
+@page{
+    margin:20mm;
+}
+
+body{
+    font-family: Arial, Helvetica, sans-serif;
+    margin:0;
+    color:#222;
+}
+
+.header-table{
+    width:100%;
+    border-collapse:collapse;
+    border-bottom:4px solid #333;
+    margin-bottom:25px;
+}
+
+.header-table td{
+    vertical-align:top;
+    padding:15px;
+}
+
+.title{
+    text-align:center;
+}
+
+.title h1{
+    margin:0;
+    letter-spacing:2px;
+}
+
+/* TABLES */
+
+.address-table, .items-table, .meta-table, .totals-table{
+    width:100%;
+    border-collapse:collapse;
+}
+
+.address-table td{
+    padding:10px;
+    vertical-align:top;
+}
+
+.section-title{
+    font-weight:bold;
+    text-transform:uppercase;
+    font-size:12px;
+}
+
+.address-text{
+    font-size:13px;
+    line-height:1.4;
+}
+
+/* ITEMS */
+
+.items-table th{
+    background:#444;
+    color:#fff;
+    padding:8px;
+    font-size:12px;
+}
+
+.items-table td{
+    border:1px solid #ccc;
+    padding:8px;
+    font-size:13px;
+}
+
+.text-right{
+    text-align:right;
+}
+
+.text-center{
+    text-align:center;
+}
+
+/* FOOTER */
+
+.footer{
+    margin-top:30px;
+    border-top:1px solid #ccc;
+    padding-top:10px;
+    text-align:center;
+    font-size:12px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<!-- HEADER -->
+
+<table class="header-table">
+<tr>
+<td colspan="2" class="title">
+<h1>SALES INVOICE</h1>
+</td>
+</tr>
+
+<tr>
+<td>
+<strong>{{invoiceMainData.companyName}}</strong><br>
+{{invoiceMainData.companyAddress}}<br>
+Phone: {{invoiceMainData.companyPhone}}
+</td>
+
+<td style="text-align:right">
+<strong>INVOICE:</strong> {{invoiceMainData.docCode}}<br>
+<strong>DATE:</strong> {{invoiceMainData.docDate}}
+</td>
+</tr>
+</table>
+
+<!-- CUSTOMER INFO -->
+
+<table class="address-table">
+<tr>
+
+<td>
+<div class="section-title">Customer</div>
+<div class="address-text">
+{{invoiceMainData.customer}}<br>
+Phone: {{invoiceMainData.mobile}}
+</div>
+</td>
+
+</tr>
+</table>
+
+<!-- ITEMS -->
+
+<table class="items-table">
+
+<thead>
+<tr>
+<th>Description</th>
+<th class="text-center">Qty</th>
+<th class="text-right">Rate</th>
+<th class="text-right">Gross</th>
+<th class="text-right">Discount</th>
+<th class="text-right">Net</th>
+</tr>
+</thead>
+
+<tbody>
+
+{{#each invoiceDetailsData}}
+
+<tr>
+<td colspan="6"><strong>{{this.product}}</strong></td>
+</tr>
+
+<tr>
+<td></td>
+
+<td class="text-center">
+{{#if this.qty}}{{this.qty}}{{else}}0{{/if}} PCS
+</td>
+
+<td class="text-right">
+{{#if this.rate}}{{this.rate}}{{else}}0.00{{/if}}
+</td>
+
+<td class="text-right">
+{{#if this.grossAmount}}{{this.grossAmount}}{{else}}0.00{{/if}}
+</td>
+
+<td class="text-right">
+{{#if this.discount}}{{this.discount}}{{else}}0.00{{/if}}
+</td>
+
+<td class="text-right">
+{{#if this.netAmount}}{{this.netAmount}}{{else}}0.00{{/if}}
+</td>
+</tr>
+
+{{/each}}
+
+</tbody>
+
+</table>
+
+<!-- TOTALS -->
+
+<div style="margin-top:20px;">
+
+<table class="totals-table">
+
+<tr>
+<td class="text-right">Gross Total</td>
+<td class="text-right">{{#if invoiceMainData.grossAmount}}{{invoiceMainData.grossAmount}}{{else}}0.00{{/if}}</td>
+</tr>
+
+<tr>
+<td class="text-right">Item Discount</td>
+<td class="text-right">{{#if invoiceMainData.itemDiscount}}{{invoiceMainData.itemDiscount}}{{else}}0.00{{/if}}</td>
+</tr>
+
+<tr>
+<td class="text-right">Invoice Discount</td>
+<td class="text-right">{{#if invoiceMainData.invoiceDiscount}}{{invoiceMainData.invoiceDiscount}}{{else}}0.00{{/if}}</td>
+</tr>
+
+<tr>
+<td class="text-right">Coupon Discount</td>
+<td class="text-right">{{#if invoiceMainData.couponDiscount}}{{invoiceMainData.couponDiscount}}{{else}}0.00{{/if}}</td>
+</tr>
+
+<tr>
+<td class="text-right"><strong>Net Total</strong></td>
+<td class="text-right"><strong>{{#if invoiceMainData.invoiceTotal}}{{invoiceMainData.invoiceTotal}}{{else}}0.00{{/if}}</strong></td>
+</tr>
+
+</table>
+
+</div>
+
+<!-- FOOTER -->
+
+<div class="footer">
+Thank you for your business
+</div>
+
+</body>
+</html>
