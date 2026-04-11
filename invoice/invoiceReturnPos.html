@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+
+<style>
+
+body{
+    font-family:'Courier New', Courier, monospace;
+    font-size:11px;
+    text-transform:uppercase;
+    margin-left:3mm;
+    margin-right:3mm;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+    margin-bottom:5px;
+}
+
+.center{text-align:center;}
+.left{text-align:left;}
+.right{text-align:right;}
+
+.header-table th{
+    font-weight:normal;
+    border-bottom:1px solid #000;
+    padding-bottom:5px;
+    font-size:10px;
+}
+
+.item-name{
+    padding-top:8px;
+    font-weight:bold;
+    display:block;
+}
+
+.item-values td{
+    padding-bottom:8px;
+}
+
+.totals-table{
+    margin-top:10px;
+    border-top:1px solid #000;
+    padding-top:5px;
+}
+
+.totals-table td{
+    padding:2px 0;
+}
+
+.footer{
+    text-align:center;
+    margin-top:15px;
+    font-size:12px;
+}
+
+.line{
+    border-top:1px dashed #000;
+    margin:6px 0;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="receipt">
+
+<!-- Company Header -->
+
+<div class="center">
+
+<b>{{invoiceReturnMainData.companyName}}</b><br>
+
+{{invoiceReturnMainData.companyAddress}}
+
+</div>
+
+<div class="line"></div>
+
+<!-- Return Info -->
+
+<div>
+
+Return Date : {{invoiceReturnMainData.docDate}} <br>
+
+Return No : {{invoiceReturnMainData.docCode}} <br>
+
+Customer : {{invoiceReturnMainData.customer}}
+
+</div>
+
+<div class="line"></div>
+
+
+<table>
+
+<tr class="header-table">
+    <th class="left" width="18%">QTY</th>
+    <th class="right" width="20%">RATE</th>
+    <th class="right" width="20%">GROSS</th>
+    <th class="right" width="20%">DISC</th>
+    <th class="right" width="22%">N.TOTAL</th>
+</tr>
+
+{{#each invoiceReturnDetailsData}}
+
+<tr>
+<td colspan="5">
+<span class="item-name">{{this.product}}</span>
+</td>
+</tr>
+
+<tr class="item-values">
+
+<td class="left">
+<div style="white-space:nowrap;">
+{{#if this.qty}}{{this.qty}}{{else}}0{{/if}} PCS
+</div>
+</td>
+
+<td class="right">
+{{#if this.rate}}{{this.rate}}{{else}}0.00{{/if}}
+</td>
+
+<td class="right">
+{{#if this.grossAmount}}{{this.grossAmount}}{{else}}0.00{{/if}}
+</td>
+
+<td class="right">
+{{#if this.discount}}{{this.discount}}{{else}}0.00{{/if}}
+</td>
+
+<td class="right">
+{{#if this.netAmount}}{{this.netAmount}}{{else}}0.00{{/if}}
+</td>
+
+</tr>
+
+{{/each}}
+
+</table>
+
+
+<table class="totals-table">
+
+<tr>
+<td class="right" style="width:70%;">Gross Total -</td>
+<td class="right">
+{{#if invoiceReturnMainData.grossAmount}}{{invoiceReturnMainData.grossAmount}}{{else}}0.00{{/if}}
+</td>
+</tr>
+
+<tr>
+<td class="right">Tax Amount -</td>
+<td class="right">
+{{#if invoiceReturnMainData.taxAmount}}{{invoiceReturnMainData.taxAmount}}{{else}}0.00{{/if}}
+</td>
+</tr>
+
+<tr>
+<td class="right">(-) Item Discount -</td>
+<td class="right">
+{{#if invoiceReturnMainData.itemDiscount}}{{invoiceReturnMainData.itemDiscount}}{{else}}0.00{{/if}}
+</td>
+</tr>
+
+<tr>
+<td class="right">(-) Return Discount -</td>
+<td class="right">
+{{#if invoiceReturnMainData.ireturnDiscount}}{{invoiceReturnMainData.ireturnDiscount}}{{else}}0.00{{/if}}
+</td>
+</tr>
+
+<tr>
+<td class="right">(-) Coupon Discount -</td>
+<td class="right">
+{{#if invoiceReturnMainData.couponDiscount}}{{invoiceReturnMainData.couponDiscount}}{{else}}0.00{{/if}}
+</td>
+</tr>
+
+<tr style="font-size:13px;font-weight:bold;">
+<td class="right">(=) Return Total -</td>
+<td class="right">
+{{#if invoiceReturnMainData.ireturnTotal}}{{invoiceReturnMainData.ireturnTotal}}{{else}}0.00{{/if}}
+</td>
+</tr>
+
+</table>
+
+
+<div class="footer">
+
+RETURN RECEIPT<br>
+THANK YOU
+
+</div>
+
+</div>
+
+</body>
+</html>
