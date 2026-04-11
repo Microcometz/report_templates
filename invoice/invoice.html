@@ -176,7 +176,7 @@ Phone : {{invoiceMainData.mobile}}
 <tr>
 <td class="right">(-) Item Discount -</td>
 <td class="right">
-{{#if invoiceMainData.discount}}{{invoiceMainData.discount}}{{else}}0.00{{/if}}
+{{#if invoiceMainData.itemDiscount}}{{invoiceMainData.itemDiscount}}{{else}}0.00{{/if}}
 </td>
 </tr>
 
@@ -184,6 +184,13 @@ Phone : {{invoiceMainData.mobile}}
 <td class="right">(-) Invoice Discount -</td>
 <td class="right">
 {{#if invoiceMainData.invoiceDiscount}}{{invoiceMainData.invoiceDiscount}}{{else}}0.00{{/if}}
+</td>
+</tr>
+
+<tr>
+<td class="right">(-) Coupon Discount -</td>
+<td class="right">
+{{#if invoiceMainData.couponDiscount}}{{invoiceMainData.couponDiscount}}{{else}}0.00{{/if}}
 </td>
 </tr>
 
