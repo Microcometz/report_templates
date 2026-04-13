@@ -122,6 +122,7 @@ Phone : {{invoiceMainData.mobile}}
     <th class="right" width="20%">RATE</th>
     <th class="right" width="20%">GROSS</th>
     <th class="right" width="20%">DISC</th>
+    <th class="right" width="20%">Tax</th>
     <th class="right" width="22%">N.TOTAL</th>
 </tr>
 
@@ -151,6 +152,10 @@ Phone : {{invoiceMainData.mobile}}
 
 <td class="right">
 {{#if this.discount}}{{this.discount}}{{else}}0.00{{/if}}
+</td>
+
+<td class="right">
+{{#if this.discount}}{{this.taxAmount}}{{else}}0.00{{/if}}
 </td>
 
 <td class="right">
@@ -191,6 +196,13 @@ Phone : {{invoiceMainData.mobile}}
 <td class="right">(-) Coupon Discount -</td>
 <td class="right">
 {{#if invoiceMainData.couponDiscount}}{{invoiceMainData.couponDiscount}}{{else}}0.00{{/if}}
+</td>
+</tr>
+
+<tr>
+<td class="right">(-) Total Tax -</td>
+<td class="right">
+{{#if invoiceMainData.taxAmount}}{{invoiceMainData.taxAmount}}{{else}}0.00{{/if}}
 </td>
 </tr>
 
