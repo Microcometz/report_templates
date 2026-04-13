@@ -21,19 +21,36 @@ table{
     margin-bottom:5px;
 }
 
-.center{
+.center{ text-align:center; }
+.left{ text-align:left; }
+.right{ text-align:right; }
+
+/* Header Layout */
+
+.header-layout{
+    width:100%;
+    border-collapse:collapse;
+    margin-bottom:5px;
+}
+
+.logo-cell{
+    width:25%;
     text-align:center;
+    vertical-align:middle;
 }
 
-.left{
-    text-align:left;
+.company-cell{
+    width:75%;
+    text-align:center;
+    vertical-align:middle;
 }
 
-.right{
-    text-align:right;
+.logo{
+    width:75px;
+    height:25px;
 }
 
-/* Header */
+/* Header Table */
 
 .header-table th{
     font-weight:normal;
@@ -66,11 +83,15 @@ table{
     padding:2px 0;
 }
 
+/* Footer */
+
 .footer{
     text-align:center;
     margin-top:15px;
     font-size:12px;
 }
+
+/* Divider */
 
 .line{
     border-top:1px dashed #000;
@@ -86,7 +107,15 @@ table{
 
 <!-- Company Header -->
 
-<div class="center">
+<table class="header-layout">
+
+<tr>
+
+<td class="logo-cell">
+<img class="logo" src="data:image/png;base64,{{image}}" alt="logo"/>
+</td>
+
+<td class="company-cell">
 
 <b>{{invoiceMainData.companyName}}</b><br>
 
@@ -94,7 +123,11 @@ table{
 
 Phone: {{invoiceMainData.companyPhone}}
 
-</div>
+</td>
+
+</tr>
+
+</table>
 
 <div class="line"></div>
 
@@ -137,9 +170,9 @@ Phone : {{invoiceMainData.mobile}}
 <tr class="item-values">
 
 <td class="left">
-  <div style="white-space:nowrap;">
-    {{#if this.qty}}{{this.qty}}{{else}}0{{/if}} PCS
-  </div>
+<div style="white-space:nowrap;">
+{{#if this.qty}}{{this.qty}}{{else}}0{{/if}} PCS
+</div>
 </td>
 
 <td class="right">
