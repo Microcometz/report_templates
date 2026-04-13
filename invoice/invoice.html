@@ -68,7 +68,7 @@ table{
 
 .footer{
     text-align:center;
-    margin-top:15px;
+    margin-top:6px;
     font-size:12px;
 }
 
@@ -118,18 +118,18 @@ Phone : {{invoiceMainData.mobile}}
 <table>
 
 <tr class="header-table">
-    <th class="left" width="18%">QTY</th>
-    <th class="right" width="20%">RATE</th>
-    <th class="right" width="20%">GROSS</th>
-    <th class="right" width="20%">DISC</th>
-    <th class="right" width="20%">Tax</th>
-    <th class="right" width="22%">N.TOTAL</th>
+    <th class="left" width="14%">QTY</th>
+    <th class="right" width="17%">RATE</th>
+    <th class="right" width="17%">GROSS</th>
+    <th class="right" width="16%">DISC</th>
+    <th class="right" width="16%">TAX</th>
+    <th class="right" width="20%">N.TOTAL</th>
 </tr>
 
 {{#each invoiceDetailsData}}
 
 <tr>
-<td colspan="5">
+<td colspan="6">
 <span class="item-name">{{this.product}}</span>
 </td>
 </tr>
@@ -155,7 +155,7 @@ Phone : {{invoiceMainData.mobile}}
 </td>
 
 <td class="right">
-{{#if this.discount}}{{this.taxAmount}}{{else}}0.00{{/if}}
+{{#if this.taxAmount}}{{this.taxAmount}}{{else}}0.00{{/if}}
 </td>
 
 <td class="right">
