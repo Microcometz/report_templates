@@ -11,9 +11,9 @@
 }
 
 body{
-    font-family: Arial, Helvetica, sans-serif;
+    font-family: "Segoe UI", Arial, sans-serif;
     margin:0;
-    color:#222;
+    color:#333;
 }
 
 /* HEADER */
@@ -21,13 +21,12 @@ body{
 .header-table{
     width:100%;
     border-collapse:collapse;
-    border-bottom:4px solid #333;
-    margin-bottom:25px;
+    margin-bottom:20px;
 }
 
 .header-table td{
+    padding:10px;
     vertical-align:top;
-    padding:15px;
 }
 
 .title{
@@ -36,58 +35,61 @@ body{
 
 .title h1{
     margin:0;
+    font-size:28px;
     letter-spacing:2px;
+    font-weight:600;
 }
 
-.title h2{
-    margin:5px 0 0 0;
-    font-weight:normal;
-    letter-spacing:2px;
+/* SECTION TITLE (highlight bar like image) */
+
+.section-title{
+    font-size:13px;
+    font-weight:600;
+    text-transform:uppercase;
+    display:inline-block;
+    padding:4px 10px;
+    background:#f3e7c3;
+    margin-bottom:8px;
 }
 
-/* ADDRESS SECTION */
+/* ADDRESS */
 
 .address-table{
     width:100%;
     border-collapse:collapse;
-    margin-bottom:20px;
+    margin-bottom:25px;
 }
 
 .address-table td{
-    vertical-align:top;
+    width:33%;
     padding:10px;
-}
-
-.section-title{
-    font-size:12px;
-    font-weight:bold;
-    text-transform:uppercase;
-    margin-bottom:5px;
+    vertical-align:top;
 }
 
 .address-text{
     font-size:13px;
-    line-height:1.4;
+    line-height:1.6;
 }
 
-/* META TABLE */
+/* META (right small info box) */
 
 .meta-table{
     width:100%;
     border-collapse:collapse;
+    margin-top:5px;
 }
 
 .meta-table td{
-    padding:6px;
-    border:1px solid #ccc;
-    font-size:13px;
+    font-size:12px;
+    padding:4px 0;
 }
 
 .meta-table td:first-child{
-    font-weight:bold;
+    font-weight:600;
+    width:50%;
 }
 
-/* ITEMS TABLE */
+/* ITEMS */
 
 .items-table{
     width:100%;
@@ -96,18 +98,17 @@ body{
 }
 
 .items-table th{
-    border:1px solid #333;
-    background-color:#444;
-    color:#ffffff;
+    background:#e9e9e9;
     font-size:12px;
     padding:8px;
     text-transform:uppercase;
+    border-bottom:2px solid #ccc;
 }
 
 .items-table td{
-    border:1px solid #ccc;
     padding:8px;
     font-size:13px;
+    border-bottom:1px solid #eee;
 }
 
 .text-center{
@@ -122,48 +123,47 @@ body{
 
 .totals-wrapper{
     width:100%;
+    margin-top:20px;
 }
 
 .totals-table{
     width:300px;
-    border-collapse:collapse;
     margin-left:auto;
+    border-collapse:collapse;
 }
 
 .totals-table td{
-    padding:8px;
-    border:1px solid #ccc;
+    padding:6px;
+    font-size:13px;
 }
 
 .total-label{
-    background-color:#444;
-    color:#ffffff;
-    font-weight:bold;
+    font-weight:600;
 }
 
-.grand-total{
+.grand-total td{
     font-weight:bold;
     font-size:16px;
+    border-top:2px solid #333;
 }
 
 /* NOTES */
 
 .notes{
-    margin-top:20px;
-    font-size:13px;
+    margin-top:30px;
+    font-size:12px;
+    border-top:1px solid #ccc;
+    padding-top:10px;
 }
 
 /* FOOTER */
 
 .footer{
-    margin-top:30px;
-    border-top:1px solid #ccc;
-    padding-top:10px;
+    margin-top:40px;
     text-align:center;
     font-size:12px;
+    color:#777;
 }
-
-/* PDF RENDERING SAFETY */
 
 thead{
     display:table-header-group;
