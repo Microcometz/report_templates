@@ -5,356 +5,305 @@
 <title>Purchase Order</title>
 
 <style>
-    @page {
-        margin: 15mm;
-    }
 
-    body {
-        font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-        margin: 0;
-        color: #333;
-        line-height: 1.5;
-    }
+@page{
+    margin:20mm;
+}
 
-    :root {
-        --primary-color: #1a2a3a;
-        --secondary-color: #4a5568;
-        --accent-color: #f8fafc;
-        --border-color: #e2e8f0;
-        --text-light: #718096;
-    }
+body{
+    font-family: Arial, Helvetica, sans-serif;
+    margin:5mm;
+    color:#222;
+}
 
-    /* HEADER */
-    .brand-header {
-        width: 100%;
-        border-collapse: collapse;
-        margin-bottom: 20px;
-    }
+/* HEADER */
 
-    .logo-cell {
-        width: 20%;
-        text-align: left;
-        vertical-align: middle;
-        padding: 10px 0;
-    }
+.header-table{
+    width:100%;
+    border-collapse:collapse;
+    border-bottom:4px solid #333;
+    margin-bottom:25px;
+}
 
-    /* FIXED LOGO CLASS */
-    .logo {
-        width: 80px;
-        max-height: 60px;
-        object-fit: contain;
-        display: block;
-    }
+.header-table td{
+    width:50%;
+    vertical-align:middle;
+    text-align:center;
+    padding:20px;
+}
 
-    .company-title-cell {
-        width: 80%;
-        text-align: center;
-        vertical-align: middle;
-        padding: 10px;
-    }
+/* LEFT HEADER */
 
-    .company-name {
-        font-size: 28px;
-        font-weight: 800;
-        color: var(--primary-color);
-        text-transform: uppercase;
-        margin: 0;
-        letter-spacing: 1px;
-    }
+.left-header{
+    text-align:center;
+}
 
-    .company-details {
-        font-size: 12px;
-        color: var(--secondary-color);
-        margin-top: 5px;
-    }
+.logo{
+    max-height:70px;
+    max-width:150px;
+    object-fit:contain;
+    margin-bottom:10px;
+}
 
-    /* DOCUMENT BAR */
-    .doc-info-bar {
-        width: 100%;
-        border-collapse: collapse;
-        margin-bottom: 35px;
-        border-top: 1px solid var(--border-color);
-        border-bottom: 2px solid var(--primary-color);
-        background-color: var(--accent-color);
-    }
+.company-name{
+    font-weight:bold;
+    font-size:16px;
+    margin-bottom:5px;
+}
 
-    .doc-info-bar td {
-        padding: 15px;
-        vertical-align: middle;
-    }
+/* RIGHT HEADER */
 
-    .po-label {
-        font-size: 22px;
-        font-weight: 300;
-        color: var(--primary-color);
-        text-transform: uppercase;
-        letter-spacing: 2px;
-    }
+.right-header h1{
+    margin:0;
+    letter-spacing:2px;
+}
 
-    .po-meta-text {
-        text-align: right;
-        font-size: 14px;
-        color: #2d3748;
-    }
+.po-meta{
+    margin-top:12px;
+    font-size:13px;
+    line-height:1.6;
+}
 
-    /* ADDRESS */
-    .address-table {
-        width: 100%;
-        border-collapse: collapse;
-        margin-bottom: 30px;
-    }
+/* ADDRESS SECTION */
 
-    .address-table td {
-        vertical-align: top;
-        padding: 0 15px 0 0;
-        width: 33.33%;
-    }
+.address-table{
+    width:100%;
+    border-collapse:collapse;
+    margin-bottom:20px;
+}
 
-    .address-card {
-        border-left: 3px solid var(--primary-color);
-        padding-left: 12px;
-    }
+.address-table td{
+    vertical-align:top;
+    padding:10px;
+}
 
-    .section-title {
-        font-size: 11px;
-        font-weight: 700;
-        color: var(--text-light);
-        text-transform: uppercase;
-        letter-spacing: 1px;
-        margin-bottom: 8px;
-    }
+.section-title{
+    font-size:12px;
+    font-weight:bold;
+    text-transform:uppercase;
+    margin-bottom:5px;
+}
 
-    .address-text {
-        font-size: 13px;
-        color: #2d3748;
-    }
+.address-text{
+    font-size:13px;
+    line-height:1.4;
+}
 
-    .address-text strong {
-        font-size: 15px;
-        color: var(--primary-color);
-        display: block;
-        margin-bottom: 2px;
-    }
+/* META TABLE */
 
-    /* META TABLE */
-    .meta-table {
-        width: 100%;
-        border-collapse: collapse;
-        background-color: #fff;
-        border: 1px solid var(--border-color);
-    }
+.meta-table{
+    width:100%;
+    border-collapse:collapse;
+}
 
-    .meta-table td {
-        padding: 8px 10px;
-        font-size: 12px;
-        border-bottom: 1px solid var(--border-color);
-    }
+.meta-table td{
+    padding:6px;
+    border:1px solid #ccc;
+    font-size:13px;
+}
 
-    .meta-table td:first-child {
-        font-weight: bold;
-        color: var(--secondary-color);
-        background-color: var(--accent-color);
-        width: 45%;
-    }
+.meta-table td:first-child{
+    font-weight:bold;
+}
 
-    /* ITEMS */
-    .items-table {
-        width: 100%;
-        border-collapse: collapse;
-        margin-bottom: 30px;
-    }
+/* ITEMS TABLE */
 
-    .items-table th {
-        background-color: var(--primary-color);
-        color: #ffffff;
-        font-size: 11px;
-        font-weight: 600;
-        padding: 12px 10px;
-        text-align: left;
-        text-transform: uppercase;
-    }
+.items-table{
+    width:100%;
+    border-collapse:collapse;
+    margin-bottom:25px;
+}
 
-    .items-table td {
-        border-bottom: 1px solid var(--border-color);
-        padding: 12px 10px;
-        font-size: 13px;
-        vertical-align: top;
-    }
+.items-table th{
+    border:1px solid #333;
+    background-color:#444;
+    color:#ffffff;
+    font-size:12px;
+    padding:8px;
+    text-transform:uppercase;
+}
 
-    .items-table tr:nth-child(even) {
-        background-color: #fafafa;
-    }
+.items-table td{
+    border:1px solid #ccc;
+    padding:8px;
+    font-size:13px;
+}
 
-    .item-product {
-        font-weight: bold;
-        color: var(--primary-color);
-        display: block;
-    }
+.text-center{
+    text-align:center;
+}
 
-    .item-desc {
-        font-size: 12px;
-        color: var(--text-light);
-    }
+.text-right{
+    text-align:right;
+}
 
-    /* TOTALS */
-    .totals-table {
-        width: 280px;
-        border-collapse: collapse;
-        margin-left: auto;
-    }
+/* TOTALS */
 
-    .totals-table td {
-        padding: 10px;
-        font-size: 13px;
-        border-bottom: 1px solid var(--border-color);
-    }
+.totals-wrapper{
+    width:100%;
+}
 
-    .total-label {
-        color: var(--secondary-color);
-        font-weight: 600;
-    }
+.totals-table{
+    width:300px;
+    border-collapse:collapse;
+    margin-left:auto;
+}
 
-    .grand-total-box {
-        background-color: var(--primary-color);
-        color: white;
-        font-weight: bold;
-        font-size: 16px;
-        padding: 12px !important;
-        text-align: right;
-    }
+.totals-table td{
+    padding:8px;
+    border:1px solid #ccc;
+}
 
-    .text-center { text-align: center; }
-    .text-right { text-align: right; }
+.total-label{
+    background-color:#444;
+    color:#ffffff;
+    font-weight:bold;
+}
 
-    .footer {
-        margin-top: 50px;
-        border-top: 1px solid var(--border-color);
-        padding-top: 20px;
-        text-align: center;
-        font-size: 11px;
-        color: var(--text-light);
-    }
+.grand-total{
+    font-weight:bold;
+    font-size:16px;
+}
 
-    thead { display: table-header-group; }
-    tr { page-break-inside: avoid; }
+/* FOOTER */
+
+.footer{
+    margin-top:30px;
+    border-top:1px solid #ccc;
+    padding-top:10px;
+    text-align:center;
+    font-size:12px;
+}
+
+/* PDF FIX */
+
+thead{
+    display:table-header-group;
+}
+
+tr{
+    page-break-inside:avoid;
+}
+
 </style>
+
 </head>
 
 <body>
 
-<table class="brand-header">
-    <tr>
-        <td class="logo-cell">
-            <img class="logo" src="data:image/png;base64,{{image}}" alt="logo"/>
-        </td>
-        <td class="company-title-cell">
-            <h1 class="company-name">{{poMainData.companyName}}</h1>
-            <div class="company-details">
-                {{poMainData.companyAddress}}<br>
-                {{poMainData.email}}
-            </div>
-        </td>
-    </tr>
+<!-- HEADER -->
+
+<table class="header-table">
+
+<tr>
+
+<td class="left-header">
+
+<img src="{{poMainData.logo}}" class="logo" alt="Company Logo">
+
+<div class="company-name">
+{{poMainData.companyName}}
+</div>
+
+<div>
+{{poMainData.shippingAddress}}
+</div>
+
+<div>
+{{poMainData.email}}
+</div>
+
+</td>
+
+<td class="right-header">
+
+<h1>PURCHASE ORDER</h1>
+
+<div class="po-meta">
+<strong>PO NUMBER:</strong> {{poMainData.documentNumber}}<br>
+<strong>Date:</strong> {{poMainData.documentDate}}
+</div>
+
+</td>
+
+</tr>
+
 </table>
 
-<table class="doc-info-bar">
-    <tr>
-        <td>
-            <span class="po-label">Purchase Order</span>
-        </td>
-        <td class="po-meta-text">
-            <strong>PO NUMBER:</strong> {{poMainData.docCode}} &nbsp;&nbsp; | &nbsp;&nbsp;
-            <strong>DATE:</strong> {{poMainData.docDate}}
-        </td>
-    </tr>
-</table>
+<!-- REMAINING CODE SAME -->
+
+<!-- ADDRESS -->
 
 <table class="address-table">
-    <tr>
-        <td>
-            <div class="address-card">
-                <div class="section-title">Vendor</div>
-                <div class="address-text">
-                    <strong>{{poMainData.partyName}}</strong>
-                    {{poMainData.partyAddress}}<br>
-                    <span style="color:var(--text-light)">Attn: {{poMainData.contactPerson}}</span>
-                </div>
-            </div>
-        </td>
-        <td>
-            <div class="address-card">
-                <div class="section-title">Ship To</div>
-                <div class="address-text">
-                    <strong>{{poMainData.companyName}}</strong>
-                    {{poMainData.shippingAddress}}<br>
-                    <span style="color:var(--text-light)">{{poMainData.email}}</span>
-                </div>
-            </div>
-        </td>
-        <td>
-            <div class="section-title">Order Details</div>
-            <table class="meta-table">
-                <tr>
-                    <td>Shipment</td>
-                    <td>{{poMainData.shipmentTerms}}</td>
-                </tr>
-                <tr>
-                    <td>Delivery</td>
-                    <td>{{poMainData.deliveryTerms}}</td>
-                </tr>
-                <tr>
-                    <td>Payment</td>
-                    <td>{{poMainData.paymentTerms}}</td>
-                </tr>
-            </table>
-        </td>
-    </tr>
+<tr>
+<td>
+<div class="section-title">Vendor</div>
+<div class="address-text">
+<strong>{{poMainData.partyName}}</strong><br>
+{{poMainData.partyAddress}}<br>
+{{poMainData.contactPerson}}
+</div>
+</td>
+
+<td>
+<div class="section-title">Ship To</div>
+<div class="address-text">
+<strong>{{poMainData.companyName}}</strong><br>
+{{poMainData.shippingAddress}}<br>
+{{poMainData.email}}
+</div>
+</td>
+
+<td>
+<div class="section-title">Order Details</div>
+<table class="meta-table">
+<tr><td>Shipment Terms</td><td>{{poMainData.shipmentTerms}}</td></tr>
+<tr><td>Delivery Terms</td><td>{{poMainData.deliveryTerms}}</td></tr>
+<tr><td>Payment Terms</td><td>{{poMainData.paymentTerms}}</td></tr>
 </table>
+</td>
+</tr>
+</table>
+
+<!-- ITEMS -->
 
 <table class="items-table">
-    <thead>
-        <tr>
-            <th width="45%">Description</th>
-            <th width="10%" class="text-center">Qty</th>
-            <th width="20%" class="text-right">Unit Price</th>
-            <th width="25%" class="text-right">Total</th>
-        </tr>
-    </thead>
-    <tbody>
-        {{#each poDetailsData}}
-        <tr>
-            <td>
-                <span class="item-product">{{this.product}}</span>
-                {{#if this.description}}
-                <span class="item-desc">{{this.description}}</span>
-                {{/if}}
-            </td>
-            <td class="text-center">{{this.qty}}</td>
-            <td class="text-right">{{this.rate}}</td>
-            <td class="text-right" style="font-weight: 600;">{{this.grossAmount}}</td>
-        </tr>
-        {{/each}}
-    </tbody>
+<thead>
+<tr>
+<th width="40%">Description</th>
+<th width="15%">Qty</th>
+<th width="20%">Unit Price</th>
+<th width="25%">Total</th>
+</tr>
+</thead>
+
+<tbody>
+{{#each poDetailsData}}
+<tr>
+<td>
+<strong>{{this.product}}</strong>
+{{#if this.description}}<br>{{this.description}}{{/if}}
+</td>
+<td class="text-center">{{this.qty}}</td>
+<td class="text-right">{{this.rate}}</td>
+<td class="text-right">{{this.grossAmount}}</td>
+</tr>
+{{/each}}
+</tbody>
 </table>
 
+<!-- TOTALS -->
+
+<div class="totals-wrapper">
 <table class="totals-table">
-    <tr>
-        <td class="total-label">Subtotal</td>
-        <td class="text-right">{{poMainData.grossAmount}}</td>
-    </tr>
-    <tr>
-        <td class="total-label">Tax</td>
-        <td class="text-right">{{poMainData.taxAmount}}</td>
-    </tr>
-    <tr>
-        <td class="total-label" style="padding-top:15px">TOTAL DUE</td>
-        <td class="grand-total-box">{{poMainData.totalAmount}}</td>
-    </tr>
+<tr><td class="total-label">Subtotal</td><td class="text-right">{{poMainData.grossAmount}}</td></tr>
+<tr><td class="total-label">Tax</td><td class="text-right">{{poMainData.taxAmount}}</td></tr>
+<tr class="grand-total"><td class="total-label">TOTAL</td><td class="text-right">{{poMainData.totalAmount}}</td></tr>
 </table>
+</div>
 
 <div class="footer">
-    <p>This is a computer generated document.</p>
-    <strong>{{poMainData.companyName}}</strong>
+{{poMainData.companyName}}
 </div>
 
 </body>
