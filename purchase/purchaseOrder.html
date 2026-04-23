@@ -5,362 +5,340 @@
 <title>Purchase Order</title>
 
 <style>
+    @page {
+        margin: 15mm;
+    }
 
-@page{
-    margin:20mm;
-}
+    body {
+        font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        margin: 0;
+        color: #333;
+        line-height: 1.5;
+    }
 
-body{
-    font-family: Arial, Helvetica, sans-serif;
-    margin:0;
-    color:#222;
-}
+    /* COLOR PALETTE */
+    :root {
+        --primary-color: #1a2a3a;
+        --secondary-color: #4a5568;
+        --accent-color: #f8fafc;
+        --border-color: #e2e8f0;
+        --text-light: #718096;
+    }
 
-/* HEADER */
+    /* HEADER */
+    .header-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 40px;
+    }
 
-.header-table{
-    width:100%;
-    border-collapse:collapse;
-    border-bottom:4px solid #333;
-    margin-bottom:25px;
-}
+    .header-table td {
+        vertical-align: middle;
+    }
 
-.header-table td{
-    vertical-align:top;
-    padding:15px;
-}
+    .company-info-cell {
+        width: 50%;
+    }
 
-.title{
-    text-align:center;
-}
+    .po-title-cell {
+        width: 50%;
+        text-align: right;
+    }
 
-.title h1{
-    margin:0;
-    letter-spacing:2px;
-}
+    .company-name {
+        font-size: 24px;
+        font-weight: 800;
+        color: var(--primary-color);
+        text-transform: uppercase;
+        margin: 0;
+    }
 
-.title h2{
-    margin:5px 0 0 0;
-    font-weight:normal;
-    letter-spacing:2px;
-}
+    .company-details {
+        font-size: 12px;
+        color: var(--secondary-color);
+        margin-top: 5px;
+    }
 
-/* ADDRESS SECTION */
+    .po-label {
+        font-size: 32px;
+        font-weight: 300;
+        color: var(--primary-color);
+        margin: 0;
+        letter-spacing: 1px;
+    }
 
-.address-table{
-    width:100%;
-    border-collapse:collapse;
-    margin-bottom:20px;
-}
+    .po-meta-header {
+        font-size: 14px;
+        margin-top: 10px;
+    }
 
-.address-table td{
-    vertical-align:top;
-    padding:10px;
-}
+    /* ADDRESS SECTION */
+    .address-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 30px;
+    }
 
-.section-title{
-    font-size:12px;
-    font-weight:bold;
-    text-transform:uppercase;
-    margin-bottom:5px;
-}
+    .address-table td {
+        vertical-align: top;
+        padding: 0 15px 0 0;
+        width: 33.33%;
+    }
 
-.address-text{
-    font-size:13px;
-    line-height:1.4;
-}
+    .address-card {
+        border-left: 3px solid var(--primary-color);
+        padding-left: 12px;
+        height: 100%;
+    }
 
-/* META TABLE */
+    .section-title {
+        font-size: 11px;
+        font-weight: 700;
+        color: var(--text-light);
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-bottom: 8px;
+    }
 
-.meta-table{
-    width:100%;
-    border-collapse:collapse;
-}
+    .address-text {
+        font-size: 13px;
+        color: #2d3748;
+    }
 
-.meta-table td{
-    padding:6px;
-    border:1px solid #ccc;
-    font-size:13px;
-}
+    .address-text strong {
+        font-size: 15px;
+        color: var(--primary-color);
+        display: block;
+        margin-bottom: 2px;
+    }
 
-.meta-table td:first-child{
-    font-weight:bold;
-}
+    /* META INFO TABLE */
+    .meta-table {
+        width: 100%;
+        border-collapse: collapse;
+        background-color: var(--accent-color);
+        border: 1px solid var(--border-color);
+    }
 
-/* ITEMS TABLE */
+    .meta-table td {
+        padding: 8px 10px;
+        font-size: 12px;
+        border-bottom: 1px solid var(--border-color);
+    }
 
-.items-table{
-    width:100%;
-    border-collapse:collapse;
-    margin-bottom:25px;
-}
+    .meta-table td:first-child {
+        font-weight: bold;
+        color: var(--secondary-color);
+        width: 45%;
+    }
 
-.items-table th{
-    border:1px solid #333;
-    background-color:#444;
-    color:#ffffff;
-    font-size:12px;
-    padding:8px;
-    text-transform:uppercase;
-}
+    /* ITEMS TABLE */
+    .items-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 30px;
+    }
 
-.items-table td{
-    border:1px solid #ccc;
-    padding:8px;
-    font-size:13px;
-}
+    .items-table th {
+        background-color: var(--primary-color);
+        color: #ffffff;
+        font-size: 11px;
+        font-weight: 600;
+        padding: 12px 10px;
+        text-align: left;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
 
-.text-center{
-    text-align:center;
-}
+    .items-table td {
+        border-bottom: 1px solid var(--border-color);
+        padding: 12px 10px;
+        font-size: 13px;
+        vertical-align: top;
+    }
 
-.text-right{
-    text-align:right;
-}
+    .items-table tr:nth-child(even) {
+        background-color: #fafafa;
+    }
 
-/* TOTALS */
+    .item-product {
+        font-weight: bold;
+        color: var(--primary-color);
+        display: block;
+        margin-bottom: 3px;
+    }
 
-.totals-wrapper{
-    width:100%;
-}
+    .item-desc {
+        font-size: 12px;
+        color: var(--text-light);
+    }
 
-.totals-table{
-    width:300px;
-    border-collapse:collapse;
-    margin-left:auto;
-}
+    /* TOTALS */
+    .totals-wrapper {
+        width: 100%;
+        margin-top: 20px;
+    }
 
-.totals-table td{
-    padding:8px;
-    border:1px solid #ccc;
-}
+    .totals-table {
+        width: 280px;
+        border-collapse: collapse;
+        margin-left: auto;
+    }
 
-.total-label{
-    background-color:#444;
-    color:#ffffff;
-    font-weight:bold;
-}
+    .totals-table td {
+        padding: 10px;
+        font-size: 13px;
+        border-bottom: 1px solid var(--border-color);
+    }
 
-.grand-total{
-    font-weight:bold;
-    font-size:16px;
-}
+    .total-label {
+        color: var(--secondary-color);
+        font-weight: 600;
+    }
 
-/* NOTES */
+    .grand-total-row td {
+        border-bottom: none;
+        padding-top: 15px;
+    }
 
-.notes{
-    margin-top:20px;
-    font-size:13px;
-}
+    .grand-total-box {
+        background-color: var(--primary-color);
+        color: white;
+        font-weight: bold;
+        font-size: 16px;
+        padding: 12px !important;
+        text-align: right;
+    }
 
-/* FOOTER */
+    .text-center { text-align: center; }
+    .text-right { text-align: right; }
 
-.footer{
-    margin-top:30px;
-    border-top:1px solid #ccc;
-    padding-top:10px;
-    text-align:center;
-    font-size:12px;
-}
+    /* FOOTER */
+    .footer {
+        margin-top: 50px;
+        border-top: 2px solid var(--accent-color);
+        padding-top: 20px;
+        text-align: center;
+        font-size: 11px;
+        color: var(--text-light);
+    }
 
-/* PDF RENDERING SAFETY */
-
-thead{
-    display:table-header-group;
-}
-
-tr{
-    page-break-inside:avoid;
-}
-
+    /* PDF FIXES */
+    thead { display: table-header-group; }
+    tr { page-break-inside: avoid; }
 </style>
-
 </head>
 
 <body>
 
-<!-- HEADER -->
-
-<table class="header-table">
-
-<tr>
-<td colspan="2" class="title">
-<h1>PURCHASE ORDER</h1>
-</td>
-</tr>
-
-<tr>
-
-<td>
-
-<strong>{{poMainData.companyName}}</strong><br>
-{{poMainData.companyAddress}}<br>
-{{poMainData.email}}
-
-</td>
-
-<td style="text-align:right">
-
-<strong>PO NUMBER:</strong>
-{{poMainData.docCode}}
-<br>
-
-<div style="padding-right:86px">
-
-<strong>Date:</strong>
-{{poMainData.docDate}}
-
-</div>
-
-</td>
-
-</tr>
-
-</table>
-
-<!-- ADDRESS -->
-
-<table class="address-table">
-
-<tr>
-
-<td>
-
-<div class="section-title">Vendor</div>
-
-<div class="address-text">
-<strong>{{poMainData.partyName}}</strong><br>
-{{poMainData.partyAddress}}<br>
-{{poMainData.contactPerson}}
-</div>
-
-</td>
-
-<td>
-
-<div class="section-title">Ship To</div>
-
-<div class="address-text">
-<strong>{{poMainData.companyName}}</strong><br>
-{{poMainData.shippingAddress}}<br>
-{{poMainData.email}}
-</div>
-
-</td>
-
-<td>
-
-<div class="section-title">Order Details</div>
-
-<table class="meta-table">
-
-<tr>
-<td>Shipment Terms</td>
-<td>{{poMainData.shipmentTerms}}</td>
-</tr>
-
-<tr>
-<td>Delivery Terms</td>
-<td>{{poMainData.deliveryTerms}}</td>
-</tr>
-
-<tr>
-<td>Payment Terms</td>
-<td>{{poMainData.paymentTerms}}</td>
-</tr>
-
-</table>
-
-</td>
-
-</tr>
-
-</table>
-
-<!-- ITEMS -->
-
-<table class="items-table">
-
-<thead>
-
-<tr>
-<th width="40%">Description</th>
-<th width="15%">Qty</th>
-<th width="20%">Unit Price</th>
-<th width="25%">Total</th>
-</tr>
-
-</thead>
-
-<tbody>
-
-{{#each poDetailsData}}
-
-<tr>
-
-<td>
-
-<strong>{{this.product}}</strong>
-
-{{#if this.description}}
-<br>
-{{this.description}}
-{{/if}}
-
-</td>
-
-<td class="text-center">
-{{this.qty}}
-</td>
-
-<td class="text-right">
-{{this.rate}}
-</td>
-
-<td class="text-right">
-{{this.grossAmount}}
-</td>
-
-</tr>
-
-{{/each}}
-
-</tbody>
-
-</table>
-
-<!-- TOTALS -->
-
-<div class="totals-wrapper">
-
-<table class="totals-table">
-
-<tr>
-<td class="total-label">Subtotal</td>
-<td class="text-right">{{poMainData.grossAmount}}</td>
-</tr>
-
-<tr>
-<td class="total-label">Tax</td>
-<td class="text-right">{{poMainData.taxAmount}}</td>
-</tr>
-
-<tr class="grand-total">
-<td class="total-label">TOTAL</td>
-<td class="text-right">{{poMainData.totalAmount}}</td>
-</tr>
-
-</table>
-
-</div>
-
-
-
-<div class="footer">
-
-{{poMainData.companyName}}
-
-</div>
+    <table class="header-table">
+        <tr>
+            <td class="company-info-cell">
+                <h1 class="company-name">{{poMainData.companyName}}</h1>
+                <div class="company-details">
+                    {{poMainData.companyAddress}}<br>
+                    {{poMainData.email}}
+                </div>
+            </td>
+            <td class="po-title-cell">
+                <h2 class="po-label">PURCHASE ORDER</h2>
+                <div class="po-meta-header">
+                    <strong>PO #:</strong> {{poMainData.docCode}} &nbsp;&nbsp; | &nbsp;&nbsp;
+                    <strong>Date:</strong> {{poMainData.docDate}}
+                </div>
+            </td>
+        </tr>
+    </table>
+
+    <table class="address-table">
+        <tr>
+            <td>
+                <div class="address-card">
+                    <div class="section-title">Vendor</div>
+                    <div class="address-text">
+                        <strong>{{poMainData.partyName}}</strong>
+                        {{poMainData.partyAddress}}<br>
+                        <span style="color:var(--text-light)">Attn: {{poMainData.contactPerson}}</span>
+                    </div>
+                </div>
+            </td>
+            <td>
+                <div class="address-card">
+                    <div class="section-title">Ship To</div>
+                    <div class="address-text">
+                        <strong>{{poMainData.companyName}}</strong>
+                        {{poMainData.shippingAddress}}<br>
+                        <span style="color:var(--text-light)">{{poMainData.email}}</span>
+                    </div>
+                </div>
+            </td>
+            <td>
+                <div class="section-title">Logistics & Terms</div>
+                <table class="meta-table">
+                    <tr>
+                        <td>Shipment</td>
+                        <td>{{poMainData.shipmentTerms}}</td>
+                    </tr>
+                    <tr>
+                        <td>Delivery</td>
+                        <td>{{poMainData.deliveryTerms}}</td>
+                    </tr>
+                    <tr>
+                        <td>Payment</td>
+                        <td>{{poMainData.paymentTerms}}</td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+
+    <table class="items-table">
+        <thead>
+            <tr>
+                <th width="45%">Description</th>
+                <th width="10%" class="text-center">Qty</th>
+                <th width="20%" class="text-right">Unit Price</th>
+                <th width="25%" class="text-right">Total</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{#each poDetailsData}}
+            <tr>
+                <td>
+                    <span class="item-product">{{this.product}}</span>
+                    {{#if this.description}}
+                    <span class="item-desc">{{this.description}}</span>
+                    {{/if}}
+                </td>
+                <td class="text-center">{{this.qty}}</td>
+                <td class="text-right">{{this.rate}}</td>
+                <td class="text-right" style="font-weight: 600;">{{this.grossAmount}}</td>
+            </tr>
+            {{/each}}
+        </tbody>
+    </table>
+
+    <div class="totals-wrapper">
+        <table class="totals-table">
+            <tr>
+                <td class="total-label">Subtotal</td>
+                <td class="text-right">{{poMainData.grossAmount}}</td>
+            </tr>
+            <tr>
+                <td class="total-label">Tax Amount</td>
+                <td class="text-right">{{poMainData.taxAmount}}</td>
+            </tr>
+            <tr class="grand-total-row">
+                <td class="total-label" style="padding-top:15px">TOTAL DUE</td>
+                <td class="grand-total-box">{{poMainData.totalAmount}}</td>
+            </tr>
+        </table>
+    </div>
+
+    <div class="footer">
+        <p>Thank you for your business.</p>
+        <strong>{{poMainData.companyName}}</strong>
+    </div>
 
 </body>
 </html>
