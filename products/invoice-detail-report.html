@@ -280,11 +280,14 @@
     <table>
         <thead>
             <tr>
-                <th class="first-col">Invoice ID</th>
-                <th>Product ID</th>
+                <th class="first-col">Invoice Number</th>
+                <th>Product Name</th>
                 <th class="text-right">Qty</th>
                 <th class="text-right">Rate</th>
+                <th class="text-right">Discount</th>
+                <th class="text-right">Tax Amount</th>
                 <th class="text-right">Gross Amount</th>
+                <th class="text-right">Pending Qty</th>
             </tr>
         </thead>
         {{!-- tfoot is declared before tbody so paginated engines pick it
@@ -308,11 +311,14 @@
         <tbody>
             {{#each items}}
             <tr>
-                <td class="first-col">{{this.invoiceMainId}}</td>
-                <td>{{this.productId}}</td>
+                <td class="first-col">{{this.docCode}}</td>
+                <td>{{this.productName}}</td>
                 <td class="text-right">{{this.qty}}</td>
                 <td class="text-right">{{this.rate}}</td>
+                <td class="text-right">{{this.discount}}</td>
+                <td class="text-right">{{this.taxAmount}}</td>
                 <td class="text-right">{{this.grossAmount}}</td>
+                <td class="text-right">{{this.pendingQty}}</td>
             </tr>
             {{/each}}
         </tbody>
