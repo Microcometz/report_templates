@@ -4,23 +4,37 @@
 <head>
     <meta charset="UTF-8">
     <style>
+        @page {
+            size: A4;
+            margin: 0;
+        }
+
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
 
+        html,
+        body {
+            background: #fff;
+        }
+
         body {
             font-family: Arial, sans-serif;
             color: #222;
             font-size: 12px;
-            padding: 14mm 10mm 16mm 10mm;
-            background: #fff;
+            padding: 14mm 10mm 18mm 10mm;
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
         }
 
         .first-page-header {
             margin-bottom: 10px;
             page-break-inside: avoid;
+            break-inside: avoid;
+            page-break-after: avoid;
+            break-after: avoid;
         }
 
         .logo-wrap {
@@ -54,6 +68,8 @@
             border-radius: 6px;
             padding: 8px;
             margin-bottom: 10px;
+            page-break-inside: avoid;
+            break-inside: avoid;
         }
 
         .filter-title {
@@ -66,22 +82,46 @@
             font-size: 11px;
         }
 
+        /* ---------- Print-safe table ---------- */
+        /* border-collapse: collapse + full cell borders => the table
+           visually "closes" at every page break because each cell
+           renders all four edges itself. */
         table {
             width: 100%;
-            border-collapse: separate;
+            border-collapse: collapse;
             border-spacing: 0;
-            border: 1px solid #d7dbe3;
+            table-layout: fixed;
         }
 
+        /* repeats the header row on every printed page after a break */
         thead {
             display: table-header-group;
+        }
+
+        tbody {
+            display: table-row-group;
+        }
+
+        /* never split a row across pages */
+        tr {
+            page-break-inside: avoid;
+            break-inside: avoid;
+        }
+
+        /* keep the header glued to the first row that follows */
+        thead tr {
+            page-break-after: avoid;
+            break-after: avoid;
         }
 
         th,
         td {
             padding: 7px 8px;
-            border-bottom: 1px solid #eceff4;
+            border: 1px solid #d7dbe3;
             font-size: 12px;
+            vertical-align: top;
+            word-wrap: break-word;
+            overflow-wrap: anywhere;
         }
 
         th {
@@ -90,27 +130,18 @@
             font-weight: bold;
         }
 
-        thead th:first-child {
-            border-top-left-radius: 8px;
-        }
-
-        thead th:last-child {
-            border-top-right-radius: 8px;
-        }
-
-        tbody tr:last-child td {
-            border-bottom: none;
-        }
-
         .text-right {
             text-align: right;
         }
 
+        /* Footer sits in the bottom 18mm of the body padding.
+           Chromium / Puppeteer / wkhtmltopdf repeat fixed-position
+           elements on every printed page. */
         .footer {
             position: fixed;
             left: 10mm;
             right: 10mm;
-            bottom: 8mm;
+            bottom: 6mm;
             display: flex;
             justify-content: space-between;
             font-size: 10px;
@@ -123,8 +154,24 @@
         }
 
         @media print {
+            body {
+                padding: 14mm 10mm 18mm 10mm;
+            }
+
             .first-page-header {
                 page-break-inside: avoid;
+                break-inside: avoid;
+                page-break-after: avoid;
+                break-after: avoid;
+            }
+
+            thead {
+                display: table-header-group;
+            }
+
+            tr {
+                page-break-inside: avoid;
+                break-inside: avoid;
             }
         }
     </style>
