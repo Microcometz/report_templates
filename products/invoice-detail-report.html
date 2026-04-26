@@ -2,15 +2,40 @@
 <html>
 
 <head>
-    <meta charset="UTF-8">
+    <meta charset="UTF-8" />
     <style>
-        /* Real per-page margins.  body padding only renders once
-           (top of page 1, bottom of last page).  @page margins are
-           reserved on EVERY page, which is what we want for the
-           top/bottom whitespace and the per-page footer band. */
+        /* ===================================================================
+           openhtmltopdf 1.1.x  /  Flying Saucer  paged-media template
+           -------------------------------------------------------------------
+           Engine-specific notes (NOT generic CSS):
+
+             * @page MARGIN BOXES (@bottom-left, @bottom-right) are NOT
+               supported by openhtmltopdf, so the per-page footer uses
+               position:fixed instead.  openhtmltopdf REPEATS fixed
+               elements on every printed page, anchored to the page box
+               (including margins).
+
+             * counter(page) and counter(pages) ARE supported inside
+               position:fixed elements - the engine resolves them on
+               every page, so "Page 1 of N", "Page 2 of N", ... appears
+               automatically without any pageNo / totalPages being
+               passed in the data payload.
+
+             * <thead> repeats on every page when display is
+               table-header-group (default for thead).
+
+             * Flexbox / CSS variables / box-shadow are unreliable in
+               openhtmltopdf 1.x -> table-cell layout is used instead
+               wherever a row of items is needed.
+
+             * @page { size: A4; margin: ... } is honored properly:
+               the same 20/15/25/15 mm margins are reserved on every
+               page (top, right, bottom, left).
+           =================================================================== */
+
         @page {
             size: A4;
-            margin: 14mm 10mm 18mm 10mm;
+            margin: 20mm 15mm 25mm 15mm;
         }
 
         * {
@@ -19,41 +44,18 @@
             box-sizing: border-box;
         }
 
-        html,
-        body {
-            background: #fff;
-        }
-
         body {
             font-family: Arial, sans-serif;
             color: #222;
             font-size: 12px;
-            -webkit-print-color-adjust: exact;
-            print-color-adjust: exact;
+            background: #fff;
         }
 
-        /* Raw-browser fallback: when the file is opened in a regular
-           browser (not by a paged-media engine), give the body an
-           A4-shaped column so it's still readable. */
-        @media screen {
-            html {
-                background: #f1f3f6;
-            }
-            body {
-                max-width: 190mm;
-                margin: 14mm auto 18mm;
-                padding: 0 10mm;
-                background: #fff;
-                box-shadow: 0 4px 18px rgba(0, 0, 0, 0.1);
-            }
-        }
-
+        /* ---------- First-page header (renders once, on page 1) ---------- */
         .first-page-header {
-            margin-bottom: 10px;
+            margin-bottom: 12px;
             page-break-inside: avoid;
-            break-inside: avoid;
             page-break-after: avoid;
-            break-after: avoid;
         }
 
         .logo-wrap {
@@ -64,31 +66,37 @@
         .logo-wrap img {
             max-height: 55px;
             max-width: 180px;
-            object-fit: contain;
         }
 
         .report-title {
             text-align: center;
             font-size: 16px;
             font-weight: bold;
-            margin-bottom: 8px;
+            margin-bottom: 10px;
         }
 
+        /* table-cell layout (flexbox unreliable in openhtmltopdf 1.x) */
         .meta-row {
-            display: flex;
-            justify-content: space-between;
-            gap: 10px;
+            display: table;
+            width: 100%;
             margin-bottom: 8px;
             font-size: 11px;
         }
 
+        .meta-cell {
+            display: table-cell;
+        }
+
+        .meta-cell-right {
+            display: table-cell;
+            text-align: right;
+        }
+
         .filter-box {
             border: 1px solid #d7dbe3;
-            border-radius: 6px;
             padding: 8px;
-            margin-bottom: 10px;
+            margin-bottom: 12px;
             page-break-inside: avoid;
-            break-inside: avoid;
         }
 
         .filter-title {
@@ -101,18 +109,17 @@
             font-size: 11px;
         }
 
-        /* ---------- Print-safe table ---------- */
-        /* border-collapse: collapse + full cell borders => the table
-           visually "closes" at every page break because each cell
-           renders all four edges itself. */
+        /* ---------- Print-safe table ----------
+           border-collapse + per-cell borders make every row render
+           with a complete frame, so the table looks "closed" on every
+           page break.  display:table-header-group repeats the column
+           headings on every page after a break. */
         table {
             width: 100%;
             border-collapse: collapse;
             border-spacing: 0;
-            table-layout: fixed;
         }
 
-        /* repeats the header row on every printed page after a break */
         thead {
             display: table-header-group;
         }
@@ -121,16 +128,8 @@
             display: table-row-group;
         }
 
-        /* never split a row across pages */
         tr {
             page-break-inside: avoid;
-            break-inside: avoid;
-        }
-
-        /* keep the header glued to the first row that follows */
-        thead tr {
-            page-break-after: avoid;
-            break-after: avoid;
         }
 
         th,
@@ -140,11 +139,10 @@
             font-size: 12px;
             vertical-align: top;
             word-wrap: break-word;
-            overflow-wrap: anywhere;
         }
 
         th {
-            background: #f3f6fb;
+            background-color: #f3f6fb;
             text-align: left;
             font-weight: bold;
         }
@@ -153,111 +151,49 @@
             text-align: right;
         }
 
-        /* Static footer = SCREEN preview only.  In print the per-page
-           footer is rendered by the @page @bottom-left / @bottom-right
-           margin boxes, so this <div> would just be a duplicate. */
-        .footer {
-            display: flex;
-            justify-content: space-between;
+        /* ---------- Per-page running footer (openhtmltopdf pattern) ----------
+           position:fixed -> openhtmltopdf clones this <div> onto every
+           printed page.  bottom/left/right are measured from the page
+           box edges (not the content area), so the footer sits inside
+           the 25 mm bottom @page margin we reserved above.
+
+           The page numbers come from CSS counters resolved per page
+           by the PDF engine - no data needs to supply pageNo or
+           totalPages.  See the .pageno::before / .pages::before
+           rules below. */
+        .page-footer {
+            position: fixed;
+            left: 15mm;
+            right: 15mm;
+            bottom: 10mm;
             font-size: 10px;
             color: #555;
-            margin-top: 14mm;
-            padding-top: 6px;
             border-top: 1px solid #d7dbe3;
+            padding-top: 4px;
         }
 
-        .footer-left,
-        .footer-right {
-            white-space: nowrap;
+        .page-footer-table {
+            display: table;
+            width: 100%;
         }
 
-        /* Screen-only auto page label.  In a browser there's no real
-           pagination, so we just show "Page 1" via a CSS generated
-           counter - no JavaScript and no Handlebars data needed.
-           In print this whole .footer is hidden; the @page margin
-           box's counter(page) / counter(pages) drives real numbers. */
-        body {
-            counter-reset: screenPage;
+        .page-footer-left {
+            display: table-cell;
         }
 
-        .page-counter::before {
-            counter-increment: screenPage;
-            content: "Page " counter(screenPage);
+        .page-footer-right {
+            display: table-cell;
+            text-align: right;
         }
 
-        @media print {
-            html,
-            body {
-                background: #fff !important;
-                box-shadow: none !important;
-                max-width: none !important;
-                margin: 0 !important;
-                padding: 0 !important;
-            }
+        .pageno::before {
+            content: counter(page);
+        }
 
-            .first-page-header {
-                page-break-inside: avoid;
-                break-inside: avoid;
-                page-break-after: avoid;
-                break-after: avoid;
-            }
-
-            /* !important so no later/inline rule can disable the
-               header repeat on page 2+ */
-            thead {
-                display: table-header-group !important;
-            }
-
-            tbody {
-                display: table-row-group;
-            }
-
-            tr {
-                page-break-inside: avoid;
-                break-inside: avoid;
-            }
-
-            /* @page margin boxes already render footer + page numbers
-               on every page, so suppress the in-flow div. */
-            .footer {
-                display: none !important;
-            }
+        .pages::before {
+            content: counter(pages);
         }
     </style>
-
-    {{!-- Per-page footer rendered by paged-media @page margin boxes.
-          counter(page) / counter(pages) are resolved by the PDF engine
-          on every page, so the footer & page numbers appear on every
-          page without JavaScript or per-page Handlebars data. --}}
-    {{#if showCreatedOn}}
-    <style>
-        @page {
-            @bottom-left {
-                content: "Generated: {{createdOn}}";
-                font-family: Arial, sans-serif;
-                font-size: 10px;
-                color: #555;
-                vertical-align: top;
-                padding-top: 4mm;
-            }
-        }
-    </style>
-    {{/if}}
-
-    {{#if showPageInfo}}
-    <style>
-        @page {
-            @bottom-right {
-                content: "Page " counter(page) " of " counter(pages);
-                font-family: Arial, sans-serif;
-                font-size: 10px;
-                color: #555;
-                vertical-align: top;
-                padding-top: 4mm;
-            }
-        }
-    </style>
-    {{/if}}
 </head>
 
 <body>
@@ -271,8 +207,8 @@
         <div class="report-title">{{reportTitle}}</div>
 
         <div class="meta-row">
-            <div>{{#if showCreatedBy}}Created By: {{createdBy}}{{/if}}</div>
-            <div>{{#if showCreatedOn}}Created On: {{createdOn}}{{/if}}</div>
+            <div class="meta-cell">{{#if showCreatedBy}}Created By: {{createdBy}}{{/if}}</div>
+            <div class="meta-cell-right">{{#if showCreatedOn}}Created On: {{createdOn}}{{/if}}</div>
         </div>
 
         {{#if showFilters}}
@@ -312,16 +248,19 @@
         </tbody>
     </table>
 
-    {{!-- Static footer: shown ONLY when the file is opened directly in
-         a browser (display: none in @media print).  Real per-page
-         "Page X of Y" numbering is rendered automatically by the
-         @page @bottom-right margin box using paged-media CSS counters
-         (counter(page) / counter(pages)).  No pageNo / totalPages
-         needs to be supplied in the data payload. --}}
-    <div class="footer" aria-hidden="true">
-        <div class="footer-left">{{#if showCreatedOn}}Generated: {{createdOn}}{{/if}}</div>
-        <div class="footer-right">
-            {{#if showPageInfo}}<span class="page-counter"></span>{{/if}}
+    {{!-- Per-page running footer.
+          openhtmltopdf renders this on every printed page using
+          position:fixed.  counter(page) / counter(pages) are auto-
+          resolved by the PDF engine, so no pageNo / totalPages needs
+          to be supplied in the Handlebars context. --}}
+    <div class="page-footer">
+        <div class="page-footer-table">
+            <div class="page-footer-left">
+                {{#if showCreatedOn}}Generated: {{createdOn}}{{/if}}
+            </div>
+            <div class="page-footer-right">
+                {{#if showPageInfo}}Page <span class="pageno"></span> of <span class="pages"></span>{{/if}}
+            </div>
         </div>
     </div>
 </body>
