@@ -9,17 +9,19 @@
            -------------------------------------------------------------------
            Engine-specific notes (NOT generic CSS):
 
-             * @page MARGIN BOXES (@bottom-left, @bottom-right) are NOT
-               supported by openhtmltopdf, so the per-page footer uses
-               position:fixed instead.  openhtmltopdf REPEATS fixed
-               elements on every printed page, anchored to the page box
-               (including margins).
+             * The per-page running footer lives inside <tfoot> with
+               display:table-footer-group.  openhtmltopdf re-emits the
+               tfoot at the BOTTOM of every page that the table spans,
+               BELOW the last visible body row.  Because tfoot is part
+               of the table layout, the engine reserves space for it
+               automatically -> the footer can never overlap rows.
+               (position:fixed footers were used previously but they
+               render on top of content if the bottom margin is short.)
 
-             * counter(page) and counter(pages) ARE supported inside
-               position:fixed elements - the engine resolves them on
-               every page, so "Page 1 of N", "Page 2 of N", ... appears
-               automatically without any pageNo / totalPages being
-               passed in the data payload.
+             * counter(page) and counter(pages) ARE resolved per page
+               inside tfoot pseudo-elements, so "Page 1 of N",
+               "Page 2 of N", ... appears automatically without any
+               pageNo / totalPages being passed in the data payload.
 
              * <thead> repeats on every page when display is
                table-header-group (default for thead).
@@ -29,26 +31,41 @@
                wherever a row of items is needed.
 
              * @page { size: A4; margin: ... } is honored properly:
-               the same 20/15/25/15 mm margins are reserved on every
-               page (top, right, bottom, left).
+               margins are reserved on every page (top, right, bottom,
+               left).  If the Java side sets margins via
+               PdfRendererBuilder it overrides these values.
            =================================================================== */
 
+        /* IMPORTANT: openhtmltopdf 1.1.x silently fails to parse the
+           `margin: a b c d` SHORTHAND inside @page in some builds.
+           Splitting into per-side properties always works. */
         @page {
-            size: A4;
-            margin: 20mm 15mm 25mm 15mm;
+            size: A4 portrait;
+            margin-top:    20mm;
+            margin-right:  15mm;
+            margin-bottom: 18mm;
+            margin-left:   15mm;
         }
 
-        * {
+        /* targeted reset (a global * { ... } reset has been observed to
+           interfere with @page margin computation in some openhtmltopdf
+           builds, so we only reset the elements we actually use) */
+        html,
+        body {
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
+            background: #fff;
         }
 
         body {
             font-family: Arial, sans-serif;
             color: #222;
             font-size: 12px;
-            background: #fff;
+        }
+
+        h1, h2, h3, h4, h5, h6, p, ul, ol, li, table {
+            margin: 0;
+            padding: 0;
         }
 
         /* ---------- First-page header (renders once, on page 1) ---------- */
@@ -109,15 +126,29 @@
             font-size: 11px;
         }
 
-        /* ---------- Print-safe table ----------
-           border-collapse + per-cell borders make every row render
-           with a complete frame, so the table looks "closed" on every
-           page break.  display:table-header-group repeats the column
-           headings on every page after a break. */
+        /* ---------- Print-safe paginated table (openhtmltopdf) ----------
+           Three engine-specific settings combine to make thead repeat
+           on every page:
+
+             1. `-fs-table-paginate: paginate`  - openhtmltopdf-only
+                CSS extension that explicitly instructs the engine to
+                paginate the table and re-emit thead/tfoot at every
+                page break.  In openhtmltopdf 1.1.x the default behavior
+                is sometimes "do not paginate", so we set it explicitly.
+
+             2. `border-collapse: separate`  - openhtmltopdf 1.1.x has
+                known bugs where `collapse` can suppress thead repeat.
+                `separate` with per-cell borders gives the same look
+                without that quirk.
+
+             3. `display: table-header-group` on <thead>  - the standard
+                CSS-3 way to mark the header for repetition. */
         table {
             width: 100%;
-            border-collapse: collapse;
+            border-collapse: separate;
             border-spacing: 0;
+            -fs-table-paginate: paginate;
+            page-break-inside: auto;
         }
 
         thead {
@@ -128,17 +159,39 @@
             display: table-row-group;
         }
 
+        /* tfoot is the per-page running footer.  display:table-footer-group
+           makes openhtmltopdf re-emit it at the BOTTOM of every page that
+           contains a row of this table, naturally below the last body
+           row.  Because it is part of the table, layout reserves space
+           for it - it can never overlap data. */
+        tfoot {
+            display: table-footer-group;
+        }
+
         tr {
             page-break-inside: avoid;
         }
 
+        /* per-cell borders so every row stays "closed" at page breaks */
         th,
         td {
             padding: 7px 8px;
-            border: 1px solid #d7dbe3;
+            border-right:  1px solid #d7dbe3;
+            border-bottom: 1px solid #d7dbe3;
             font-size: 12px;
             vertical-align: top;
             word-wrap: break-word;
+        }
+
+        /* outer left + top edges (separate-mode equivalent of an outer
+           table border) */
+        th.first-col,
+        td.first-col {
+            border-left: 1px solid #d7dbe3;
+        }
+
+        thead th {
+            border-top: 1px solid #d7dbe3;
         }
 
         th {
@@ -151,34 +204,33 @@
             text-align: right;
         }
 
-        /* ---------- Per-page running footer (openhtmltopdf pattern) ----------
-           position:fixed -> openhtmltopdf clones this <div> onto every
-           printed page.  bottom/left/right are measured from the page
-           box edges (not the content area), so the footer sits inside
-           the 25 mm bottom @page margin we reserved above.
-
-           The page numbers come from CSS counters resolved per page
-           by the PDF engine - no data needs to supply pageNo or
-           totalPages.  See the .pageno::before / .pages::before
-           rules below. */
-        .page-footer {
-            position: fixed;
-            left: 15mm;
-            right: 15mm;
-            bottom: 10mm;
+        /* ---------- Per-page running footer (tfoot) ----------
+           The cell spans all 5 columns and gets a clean look (no grid
+           borders, just a single top separator).  Inside the cell we
+           use a CSS table to put "Generated: ..." on the left and
+           "Page X of Y" on the right.  counter(page) / counter(pages)
+           are resolved per page by openhtmltopdf, so no pageNo /
+           totalPages is needed in the data payload. */
+        tfoot td.page-footer-cell {
+            border-top:    1px solid #d7dbe3;
+            border-right:  none;
+            border-bottom: none;
+            border-left:   none;
+            padding: 6px 0 0 0;
             font-size: 10px;
             color: #555;
-            border-top: 1px solid #d7dbe3;
-            padding-top: 4px;
+            background: #fff;
         }
 
-        .page-footer-table {
+        .page-footer-row {
             display: table;
             width: 100%;
+            table-layout: fixed;
         }
 
         .page-footer-left {
             display: table-cell;
+            text-align: left;
         }
 
         .page-footer-right {
@@ -228,17 +280,35 @@
     <table>
         <thead>
             <tr>
-                <th>Invoice ID</th>
+                <th class="first-col">Invoice ID</th>
                 <th>Product ID</th>
                 <th class="text-right">Qty</th>
                 <th class="text-right">Rate</th>
                 <th class="text-right">Gross Amount</th>
             </tr>
         </thead>
+        {{!-- tfoot is declared before tbody so paginated engines pick it
+              up as the running footer.  openhtmltopdf re-emits this row
+              at the bottom of every page the table spans, BELOW the
+              last body row -> guaranteed never to overlap data. --}}
+        <tfoot>
+            <tr>
+                <td class="page-footer-cell" colspan="5">
+                    <div class="page-footer-row">
+                        <div class="page-footer-left">
+                            {{#if showCreatedOn}}Generated: {{createdOn}}{{/if}}
+                        </div>
+                        <div class="page-footer-right">
+                            {{#if showPageInfo}}Page <span class="pageno"></span> of <span class="pages"></span>{{/if}}
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        </tfoot>
         <tbody>
             {{#each items}}
             <tr>
-                <td>{{this.invoiceMainId}}</td>
+                <td class="first-col">{{this.invoiceMainId}}</td>
                 <td>{{this.productId}}</td>
                 <td class="text-right">{{this.qty}}</td>
                 <td class="text-right">{{this.rate}}</td>
@@ -247,22 +317,6 @@
             {{/each}}
         </tbody>
     </table>
-
-    {{!-- Per-page running footer.
-          openhtmltopdf renders this on every printed page using
-          position:fixed.  counter(page) / counter(pages) are auto-
-          resolved by the PDF engine, so no pageNo / totalPages needs
-          to be supplied in the Handlebars context. --}}
-    <div class="page-footer">
-        <div class="page-footer-table">
-            <div class="page-footer-left">
-                {{#if showCreatedOn}}Generated: {{createdOn}}{{/if}}
-            </div>
-            <div class="page-footer-right">
-                {{#if showPageInfo}}Page <span class="pageno"></span> of <span class="pages"></span>{{/if}}
-            </div>
-        </div>
-    </div>
 </body>
 
 </html>
