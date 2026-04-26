@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Report Template Designer</title>
+<link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+<header class="topbar">
+  <div class="brand">
+    <span class="brand-mark">RT</span>
+    <span class="brand-name">Report Designer</span>
+    <span class="doc-name" id="docName">untitled</span>
+  </div>
+
+  <div class="toolbar">
+    <div class="menu" data-menu="file">
+      <button type="button" class="menu-btn">File <span class="caret">&#9662;</span></button>
+      <div class="menu-list">
+        <button type="button" data-act="new">New from preset...</button>
+        <button type="button" data-act="open">Open file...</button>
+        <hr>
+        <button type="button" data-act="save">Save</button>
+        <button type="button" data-act="save-as">Save as...</button>
+      </div>
+    </div>
+
+    <div class="menu" data-menu="add">
+      <button type="button" class="menu-btn primary">+ Add block <span class="caret">&#9662;</span></button>
+      <div class="menu-list menu-palette" id="paletteList"></div>
+    </div>
+
+    <span class="status" id="status"></span>
+  </div>
+</header>
+
+<main class="layout">
+
+  <aside class="rail" aria-label="Editor">
+    <nav class="tabs" role="tablist">
+      <button type="button" class="tab active" data-tab="blocks">Blocks</button>
+      <button type="button" class="tab" data-tab="theme">Theme</button>
+      <button type="button" class="tab" data-tab="page">Page</button>
+      <button type="button" class="tab" data-tab="data">Data</button>
+    </nav>
+
+    <div class="tab-pane active" data-pane="blocks">
+      <div id="blockList" class="block-list" aria-label="Blocks"></div>
+      <div class="rail-empty" id="blockListEmpty" hidden>
+        No blocks yet. Click <strong>+ Add block</strong> in the toolbar to start.
+      </div>
+    </div>
+
+    <div class="tab-pane" data-pane="theme">
+      <div class="rail-section">
+        <label class="field">
+          <span>Preset</span>
+          <select id="themePreset"></select>
+        </label>
+        <label class="field">
+          <span>Font family</span>
+          <input id="themeFont" type="text">
+        </label>
+        <label class="field">
+          <span>Base font size</span>
+          <input id="themeFontSize" type="text" placeholder="11px">
+        </label>
+        <div class="field-row">
+          <label class="field">
+            <span>Text color</span>
+            <input id="themeColor" type="color">
+          </label>
+          <label class="field">
+            <span>Accent</span>
+            <input id="themeAccent" type="color">
+          </label>
+          <label class="field">
+            <span>Border</span>
+            <input id="themeBorderColor" type="color">
+          </label>
+        </div>
+        <label class="field">
+          <span>Border style</span>
+          <select id="themeBorderStyle">
+            <option value="solid">Solid</option>
+            <option value="dashed">Dashed</option>
+            <option value="dotted">Dotted</option>
+            <option value="double">Double</option>
+            <option value="none">None</option>
+          </select>
+        </label>
+        <label class="field check">
+          <input id="themeUppercase" type="checkbox"> Uppercase text
+        </label>
+      </div>
+    </div>
+
+    <div class="tab-pane" data-pane="page">
+      <div class="rail-section">
+        <label class="field">
+          <span>Page size</span>
+          <select id="pageSize">
+            <option value="80mm">80mm thermal</option>
+            <option value="58mm">58mm thermal</option>
+            <option value="a4">A4 (210mm)</option>
+            <option value="letter">US Letter</option>
+            <option value="custom">Custom width</option>
+          </select>
+        </label>
+        <label class="field" id="pageWidthRow" hidden>
+          <span>Custom width</span>
+          <input id="pageWidth" type="text" placeholder="100mm">
+        </label>
+        <label class="field">
+          <span>Margin</span>
+          <input id="pageMargin" type="text" placeholder="20mm">
+        </label>
+        <label class="field">
+          <span>Orientation</span>
+          <select id="pageOrientation">
+            <option value="portrait">Portrait</option>
+            <option value="landscape">Landscape</option>
+          </select>
+        </label>
+      </div>
+    </div>
+
+    <div class="tab-pane" data-pane="data">
+      <div class="rail-section">
+        <label class="field">
+          <span>Document title</span>
+          <input id="metaTitle" type="text" placeholder="SALES INVOICE">
+        </label>
+        <label class="field">
+          <span>File name (no .html)</span>
+          <input id="metaName" type="text" placeholder="myInvoice">
+        </label>
+        <label class="field">
+          <span>Main data namespace</span>
+          <input id="dataMain" type="text" placeholder="invoiceMainData">
+        </label>
+        <label class="field">
+          <span>Details (items) namespace</span>
+          <input id="dataDetails" type="text" placeholder="invoiceDetailsData">
+        </label>
+        <p class="hint">
+          Block fields like <code>docDate</code> reference
+          <code>{{<span id="dataMainPreview">mainData</span>.docDate}}</code>.
+          Items use <code>{{this.&lt;field&gt;}}</code> inside
+          <code>{{#each <span id="dataDetailsPreview">detailsData</span>}}</code>.
+        </p>
+      </div>
+    </div>
+  </aside>
+
+  <section class="preview-pane" aria-label="Preview">
+    <div class="preview-bar">
+      <div class="preview-zoom">
+        <button type="button" data-zoom="out" title="Zoom out">-</button>
+        <span id="zoomLabel">100%</span>
+        <button type="button" data-zoom="in" title="Zoom in">+</button>
+      </div>
+      <div class="preview-tabs">
+        <button type="button" class="preview-tab active" data-preview="rendered">Preview</button>
+        <button type="button" class="preview-tab" data-preview="raw">Source HTML</button>
+      </div>
+    </div>
+    <div class="preview-body active" data-pview="rendered">
+      <iframe id="frame" sandbox="allow-same-origin allow-scripts" title="Live preview"></iframe>
+    </div>
+    <div class="preview-body" data-pview="raw">
+      <textarea id="rawHtml" readonly spellcheck="false"></textarea>
+    </div>
+  </section>
+
+</main>
+
+<!-- ============================ Modals ============================ -->
+
+<div id="newDialog" class="modal hidden" aria-hidden="true">
+  <div class="modal-backdrop" data-close></div>
+  <div class="modal-card">
+    <header><h2>Start a new template</h2><button type="button" class="close" data-close>&times;</button></header>
+    <div id="newPresetList" class="preset-list"></div>
+  </div>
+</div>
+
+<div id="openDialog" class="modal hidden" aria-hidden="true">
+  <div class="modal-backdrop" data-close></div>
+  <div class="modal-card">
+    <header><h2>Open template</h2><button type="button" class="close" data-close>&times;</button></header>
+    <input id="fileFilter" type="text" placeholder="Filter by name..." autocomplete="off">
+    <div id="fileList" class="file-list"></div>
+    <footer class="modal-footer">
+      <span class="hint" id="openHint">Files marked <span class="badge">designer</span> reopen with the visual editor.</span>
+    </footer>
+  </div>
+</div>
+
+<div id="saveAsDialog" class="modal hidden" aria-hidden="true">
+  <div class="modal-backdrop" data-close></div>
+  <div class="modal-card">
+    <header><h2>Save as</h2><button type="button" class="close" data-close>&times;</button></header>
+    <div class="rail-section">
+      <label class="field">
+        <span>Folder</span>
+        <select id="saveFolder"></select>
+      </label>
+      <label class="field">
+        <span>Filename</span>
+        <input id="saveName" type="text" placeholder="myInvoice.html">
+      </label>
+      <label class="field check">
+        <input id="saveOverwrite" type="checkbox"> Overwrite if it already exists
+      </label>
+    </div>
+    <footer class="modal-footer">
+      <button type="button" class="primary" id="saveAsConfirm">Save</button>
+      <button type="button" data-close>Cancel</button>
+    </footer>
+  </div>
+</div>
+
+<div id="paletteDialog" class="modal hidden" aria-hidden="true">
+  <div class="modal-backdrop" data-close></div>
+  <div class="modal-card">
+    <header><h2>Add block</h2><button type="button" class="close" data-close>&times;</button></header>
+    <div id="paletteFull" class="palette-grid"></div>
+  </div>
+</div>
+
+<!-- ============================ Templates ============================ -->
+
+<template id="tplBlockItem">
+  <div class="block-item" draggable="true">
+    <button type="button" class="drag" title="Drag to reorder">&#x2630;</button>
+    <button type="button" class="block-head">
+      <span class="block-icon"></span>
+      <span class="block-title">block</span>
+      <span class="caret">&#9662;</span>
+    </button>
+    <button type="button" class="del" title="Delete block">&times;</button>
+    <div class="block-body" hidden></div>
+  </div>
+</template>
+
+<template id="tplListItem">
+  <div class="list-item">
+    <div class="list-item-fields"></div>
+    <button type="button" class="list-del" title="Remove">&times;</button>
+  </div>
+</template>
+
+<script src="/static/app.js"></script>
+</body>
+</html>

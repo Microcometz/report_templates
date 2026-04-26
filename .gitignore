@@ -1,0 +1,7 @@
+# Generator output
+/generated/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
