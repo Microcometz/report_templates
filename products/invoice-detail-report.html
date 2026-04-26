@@ -143,12 +143,48 @@
 
              3. `display: table-header-group` on <thead>  - the standard
                 CSS-3 way to mark the header for repetition. */
+        /* table-layout: fixed + <colgroup> % widths so columns keep a
+           stable split; overflow-wrap lets long text wrap inside each
+           column instead of forcing the table wider than the page. */
         table {
             width: 100%;
+            table-layout: fixed;
             border-collapse: separate;
             border-spacing: 0;
             -fs-table-paginate: paginate;
             page-break-inside: auto;
+        }
+
+        col.col-inv {
+            width: 12%;
+        }
+
+        col.col-product {
+            width: 28%;
+        }
+
+        col.col-qty {
+            width: 7%;
+        }
+
+        col.col-rate {
+            width: 10%;
+        }
+
+        col.col-discount {
+            width: 10%;
+        }
+
+        col.col-tax {
+            width: 10%;
+        }
+
+        col.col-gross {
+            width: 12%;
+        }
+
+        col.col-pending {
+            width: 9%;
         }
 
         thead {
@@ -181,6 +217,8 @@
             font-size: 12px;
             vertical-align: top;
             word-wrap: break-word;
+            overflow-wrap: break-word;
+            word-break: break-word;
         }
 
         /* outer left + top edges (separate-mode equivalent of an outer
@@ -278,16 +316,26 @@
     </div>
 
     <table>
+        <colgroup>
+            <col class="col-inv" />
+            <col class="col-product" />
+            <col class="col-qty" />
+            <col class="col-rate" />
+            <col class="col-discount" />
+            <col class="col-tax" />
+            <col class="col-gross" />
+            <col class="col-pending" />
+        </colgroup>
         <thead>
             <tr>
-                <th class="first-col">Invoice Number</th>
-                <th>Product Name</th>
+                <th class="first-col">Invoice</th>
+                <th>Product</th>
                 <th class="text-right">Qty</th>
                 <th class="text-right">Rate</th>
                 <th class="text-right">Discount</th>
-                <th class="text-right">Tax Amount</th>
-                <th class="text-right">Gross Amount</th>
-                <th class="text-right">Pending Qty</th>
+                <th class="text-right">Tax</th>
+                <th class="text-right">Gross</th>
+                <th class="text-right">P.Qty</th>
             </tr>
         </thead>
         {{!-- tfoot is declared before tbody so paginated engines pick it
@@ -296,7 +344,7 @@
               last body row -> guaranteed never to overlap data. --}}
         <tfoot>
             <tr>
-                <td class="page-footer-cell" colspan="5">
+                <td class="page-footer-cell" colspan="8">
                     <div class="page-footer-row">
                         <div class="page-footer-left">
                             {{#if showCreatedOn}}Generated: {{createdOn}}{{/if}}
