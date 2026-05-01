@@ -30,6 +30,10 @@ You get:
 - **Live WYSIWYG preview** - iframe re-renders on every change with
   sample data. Hover any block in the rail to outline the matching
   section in the preview.
+- **Custom preview data** - paste your real JSON payload in the
+  **Data** tab to see the template render with actual values
+  (validated live, persisted in `localStorage`, never sent anywhere
+  except the local server).
 - **File menu** - **New** from preset, **Open** (any HTML file in the
   repo), **Save**, and **Save as...** (with folder picker and
   conflict detection).
@@ -180,14 +184,20 @@ When saved, the design is base64-encoded into an HTML comment placed
 | ------ | -------------------------- | ------------------------------------- | ----------------------------- |
 | GET    | `/api/block-types`         | -                                     | block schemas + theme presets |
 | GET    | `/api/designs`             | -                                     | built-in design presets       |
+| GET    | `/api/sample-data`         | -                                     | default sample payload (JSON) |
 | GET    | `/api/templates`           | -                                     | list of editable .html files  |
 | GET    | `/api/template?path=...`   | -                                     | file content + design (if any)|
-| POST   | `/api/design/render`       | `{design}`                            | `{html, rendered}`            |
+| POST   | `/api/design/render`       | `{design, data?}`                     | `{html, rendered}`            |
 | POST   | `/api/design/save`         | `{design, path}`                      | `{path, bytes}`               |
 | POST   | `/api/design/save-as`      | `{design, path, overwrite}`           | `{path, bytes}` or 409        |
 | POST   | `/api/design/load`         | `{path}`                              | `{path, content, design?}`    |
-| POST   | `/api/render`              | `{html}`                              | `{rendered}` (raw HTML)       |
+| POST   | `/api/render`              | `{html, data?}`                       | `{rendered}` (raw HTML)       |
 | POST   | `/api/template/save`       | `{path, content}`                     | `{path, bytes}` (raw save)    |
+
+If the optional `data` field is omitted (or `null`), `/api/design/render`
+and `/api/render` fall back to the bundled `sample_data.for_any()`. When
+provided, it must be a JSON object; arrays / strings / numbers return
+`400 Bad Request`.
 
 ## Notes
 

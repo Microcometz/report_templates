@@ -15,11 +15,12 @@ GET  /static/<file>             static asset
 GET  /api/templates             list .html files in repo (excluding tools/)
 GET  /api/template?path=...     read a file's raw content
 POST /api/template/save         save raw content back to its original path
-POST /api/render                render arbitrary HTML with sample data
+POST /api/render                render arbitrary HTML; body { html, data? }
 
 GET  /api/block-types           designer: block schemas + theme/page presets
 GET  /api/designs               designer: built-in design presets
-POST /api/design/render         designer: { design } -> { html, rendered }
+GET  /api/sample-data           designer: default sample payload (for editor)
+POST /api/design/render         designer: { design, data? } -> { html, rendered }
 POST /api/design/save           designer: { design, path? } -> save .html
 POST /api/design/save-as        designer: { design, path, overwrite? }
 POST /api/design/load           designer: { path } -> { design? , content }
@@ -248,6 +249,10 @@ class Handler(BaseHTTPRequestHandler):
             self._send_json(HTTPStatus.OK, {"designs": DESIGN_PRESETS})
             return
 
+        if path == "/api/sample-data":
+            self._send_json(HTTPStatus.OK, {"data": sample_for_any()})
+            return
+
         if path == "/api/templates":
             self._send_json(HTTPStatus.OK, {
                 "templates": _list_html_files(),
@@ -295,8 +300,13 @@ class Handler(BaseHTTPRequestHandler):
         if path == "/api/design/render":
             try:
                 design = payload.get("design") or {}
+                data = payload.get("data")
+                if data is None:
+                    data = sample_for_any()
+                elif not isinstance(data, dict):
+                    raise ValueError("data must be a JSON object")
                 html = render_design(design)
-                rendered = hbs_render(html, sample_for_any())
+                rendered = hbs_render(html, data)
             except Exception as exc:  # noqa: BLE001
                 self._send_json(HTTPStatus.BAD_REQUEST, {"error": str(exc)})
                 return
@@ -358,7 +368,12 @@ class Handler(BaseHTTPRequestHandler):
         if path == "/api/render":
             try:
                 html = payload.get("html") or ""
-                rendered = hbs_render(html, sample_for_any())
+                data = payload.get("data")
+                if data is None:
+                    data = sample_for_any()
+                elif not isinstance(data, dict):
+                    raise ValueError("data must be a JSON object")
+                rendered = hbs_render(html, data)
             except Exception as exc:  # noqa: BLE001
                 self._send_json(HTTPStatus.BAD_REQUEST, {"error": str(exc)})
                 return

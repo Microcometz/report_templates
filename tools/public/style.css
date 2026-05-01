@@ -325,6 +325,95 @@ body {
   font-size: 11px;
 }
 
+/* ============================== JSON editor ============================== */
+
+.rail-sep {
+  border: none;
+  border-top: 1px solid #e5e7eb;
+  margin: 14px -12px;
+}
+
+.data-json-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.data-json-title {
+  font-weight: 600;
+  font-size: 13px;
+  color: #1f2937;
+}
+
+.data-json-status {
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: #f3f4f6;
+  color: #6b7280;
+}
+.data-json-status.custom { background: #dcfce7; color: #166534; }
+.data-json-status.invalid { background: #fee2e2; color: #b91c1c; }
+
+.data-json-actions {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.data-btn {
+  padding: 4px 10px;
+  border: 1px solid #d1d5db;
+  border-radius: 5px;
+  background: white;
+  font-size: 11px;
+  font-weight: 500;
+  color: #374151;
+  cursor: pointer;
+  transition: background .15s, border-color .15s;
+}
+.data-btn:hover { background: #f3f4f6; border-color: #9ca3af; }
+
+.data-json-editor {
+  width: 100%;
+  min-height: 220px;
+  height: 320px;
+  padding: 10px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  background: #1f2937;
+  color: #e5e7eb;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 11.5px;
+  line-height: 1.5;
+  resize: vertical;
+  outline: none;
+  tab-size: 2;
+  white-space: pre;
+  overflow: auto;
+}
+.data-json-editor:focus {
+  border-color: #6366f1;
+  box-shadow: 0 0 0 3px rgba(99,102,241,.18);
+}
+.data-json-editor.invalid {
+  border-color: #dc2626;
+  box-shadow: 0 0 0 3px rgba(220,38,38,.15);
+}
+
+.data-json-error {
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  color: #991b1b;
+  padding: 6px 10px;
+  border-radius: 5px;
+  font-size: 11.5px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
 /* =============================== block list =============================== */
 
 .block-list {

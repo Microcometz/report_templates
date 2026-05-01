@@ -151,6 +151,27 @@
           <code>{{#each <span id="dataDetailsPreview">detailsData</span>}}</code>.
         </p>
       </div>
+
+      <hr class="rail-sep">
+
+      <div class="rail-section">
+        <div class="data-json-header">
+          <span class="data-json-title">Preview data (JSON)</span>
+          <span id="dataJsonStatus" class="data-json-status">sample</span>
+        </div>
+        <p class="hint">
+          The live preview renders with this data. Paste your real JSON
+          payload to see your template with actual values - it never
+          leaves the browser.
+        </p>
+        <div class="data-json-actions">
+          <button type="button" id="dataLoadSample" class="data-btn">Load sample</button>
+          <button type="button" id="dataFormat" class="data-btn">Format</button>
+          <button type="button" id="dataReset" class="data-btn">Reset</button>
+        </div>
+        <textarea id="dataJson" class="data-json-editor" spellcheck="false" autocomplete="off" autocapitalize="off"></textarea>
+        <div id="dataJsonError" class="data-json-error" hidden></div>
+      </div>
     </div>
   </aside>
 

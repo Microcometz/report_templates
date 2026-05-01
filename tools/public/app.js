@@ -82,20 +82,39 @@
     openPath: null,           // current path on disk if loaded
     expanded: new Set(),      // ids of expanded block items
     zoom:     1.0,
+    sampleData:  null,        // fallback JSON used when user clears editor
+    previewData: null,        // user-supplied JSON, or null for sample
+    dataValid:   true,        // whether the textarea's content parses
   };
+
+  const LS_PREVIEW_DATA = 'rt-designer.previewData';
 
   // -------------------------------------------------------------- bootstrap
 
   async function boot() {
-    const [schema, designs] = await Promise.all([
+    const [schema, designs, sample] = await Promise.all([
       api.get('/api/block-types'),
       api.get('/api/designs'),
+      api.get('/api/sample-data'),
     ]);
     state.schema = schema;
     state.designs = designs.designs;
+    state.sampleData = sample.data;
+
+    // Restore user's previously-typed JSON if any
+    const stored = localStorage.getItem(LS_PREVIEW_DATA);
+    if (stored !== null) {
+      try {
+        const parsed = JSON.parse(stored);
+        state.previewData = parsed;
+      } catch (_) {
+        state.previewData = null;
+      }
+    }
 
     initThemePresets();
     initPalette();
+    initDataEditor();
     initEvents();
 
     loadDesign(deepClone(designs.designs['Sales Invoice (POS receipt)']));
@@ -564,9 +583,12 @@
   const refreshPreviewDebounced = debounce(refreshPreview, 200);
 
   async function refreshPreview() {
+    if (!state.dataValid) return;
     const design = deepClone(state.design);
+    const body = {design};
+    if (state.previewData !== null) body.data = state.previewData;
     try {
-      const res = await api.post('/api/design/render', {design});
+      const res = await api.post('/api/design/render', body);
       const frame = $('#frame');
       const doc = frame.contentDocument || frame.contentWindow.document;
       doc.open();
@@ -576,6 +598,103 @@
       setStatus('');
     } catch (e) {
       setStatus(e.message, 'error');
+    }
+  }
+
+  // -------------------------------------------------------------- data editor
+
+  function initDataEditor() {
+    const editor = $('#dataJson');
+
+    // Pre-fill: user's saved JSON, else server-supplied sample.
+    const initial = state.previewData !== null
+      ? state.previewData
+      : state.sampleData;
+    editor.value = JSON.stringify(initial, null, 2);
+
+    editor.addEventListener('input', () => onDataInput());
+
+    $('#dataLoadSample').addEventListener('click', () => {
+      editor.value = JSON.stringify(state.sampleData, null, 2);
+      onDataInput();
+    });
+
+    $('#dataReset').addEventListener('click', () => {
+      // "Reset" clears the user override - preview falls back to sample.
+      editor.value = JSON.stringify(state.sampleData, null, 2);
+      state.previewData = null;
+      localStorage.removeItem(LS_PREVIEW_DATA);
+      state.dataValid = true;
+      editor.classList.remove('invalid');
+      $('#dataJsonError').hidden = true;
+      updateDataStatus();
+      refreshPreview();
+    });
+
+    $('#dataFormat').addEventListener('click', () => {
+      try {
+        const parsed = JSON.parse(editor.value);
+        editor.value = JSON.stringify(parsed, null, 2);
+        onDataInput();
+      } catch (e) {
+        showDataError(e.message);
+      }
+    });
+
+    updateDataStatus();
+  }
+
+  function onDataInput() {
+    const editor = $('#dataJson');
+    const text = editor.value.trim();
+    if (!text) {
+      // empty -> fall back to sample
+      state.previewData = null;
+      state.dataValid = true;
+      editor.classList.remove('invalid');
+      $('#dataJsonError').hidden = true;
+      localStorage.removeItem(LS_PREVIEW_DATA);
+      updateDataStatus();
+      refreshPreviewDebounced();
+      return;
+    }
+    try {
+      const parsed = JSON.parse(text);
+      if (typeof parsed !== 'object' || parsed === null || Array.isArray(parsed)) {
+        throw new Error('Top-level JSON must be an object');
+      }
+      state.previewData = parsed;
+      state.dataValid = true;
+      editor.classList.remove('invalid');
+      $('#dataJsonError').hidden = true;
+      try { localStorage.setItem(LS_PREVIEW_DATA, text); } catch (_) {}
+      updateDataStatus();
+      refreshPreviewDebounced();
+    } catch (e) {
+      state.dataValid = false;
+      editor.classList.add('invalid');
+      showDataError(e.message);
+      updateDataStatus();
+    }
+  }
+
+  function showDataError(msg) {
+    const el = $('#dataJsonError');
+    el.textContent = msg;
+    el.hidden = false;
+  }
+
+  function updateDataStatus() {
+    const el = $('#dataJsonStatus');
+    if (!state.dataValid) {
+      el.textContent = 'invalid';
+      el.className = 'data-json-status invalid';
+    } else if (state.previewData !== null) {
+      el.textContent = 'custom';
+      el.className = 'data-json-status custom';
+    } else {
+      el.textContent = 'sample';
+      el.className = 'data-json-status';
     }
   }
 

@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <!--
+      Invoice remaining / detail export for XLSX (report-service parses table[data-xlsx]).
+      Same Handlebars context as invoice-detail-report.html (reportTitle, filters, items, …).
+      PDF printing continues to use invoice-detail-report.html only.
+    -->
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            color: #222;
+            font-size: 12px;
+            padding: 14mm 10mm 16mm 10mm;
+            background: #fff;
+        }
+
+        .first-page-header {
+            margin-bottom: 10px;
+            page-break-inside: avoid;
+        }
+
+        .logo-wrap {
+            text-align: center;
+            margin-bottom: 8px;
+        }
+
+        .logo-wrap img {
+            max-height: 55px;
+            max-width: 180px;
+            object-fit: contain;
+        }
+
+        .report-title {
+            text-align: center;
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .meta-row {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            margin-bottom: 8px;
+            font-size: 11px;
+        }
+
+        .filter-box {
+            border: 1px solid #d7dbe3;
+            border-radius: 6px;
+            padding: 8px;
+            margin-bottom: 10px;
+        }
+
+        .filter-title {
+            font-weight: bold;
+            margin-bottom: 6px;
+        }
+
+        .filter-item {
+            margin-bottom: 2px;
+            font-size: 11px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            border: 1px solid #d7dbe3;
+        }
+
+        thead {
+            display: table-header-group;
+        }
+
+        th,
+        td {
+            padding: 7px 8px;
+            border-bottom: 1px solid #eceff4;
+            font-size: 12px;
+        }
+
+        th {
+            background: #f3f6fb;
+            text-align: left;
+            font-weight: bold;
+        }
+
+        thead th:first-child {
+            border-top-left-radius: 8px;
+        }
+
+        thead th:last-child {
+            border-top-right-radius: 8px;
+        }
+
+        tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        .text-right {
+            text-align: right;
+        }
+
+        .footer {
+            position: fixed;
+            left: 10mm;
+            right: 10mm;
+            bottom: 8mm;
+            display: flex;
+            justify-content: space-between;
+            font-size: 10px;
+            color: #555;
+        }
+
+        .footer-left,
+        .footer-right {
+            white-space: nowrap;
+        }
+
+        @media print {
+            .first-page-header {
+                page-break-inside: avoid;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="first-page-header">
+        {{#if showLogo}}
+        <div class="logo-wrap">
+            <img src="{{logo}}" alt="logo" />
+        </div>
+        {{/if}}
+
+        <div class="report-title">{{reportTitle}}</div>
+
+        <div class="meta-row">
+            <div>{{#if showCreatedBy}}Created By: {{createdBy}}{{/if}}</div>
+            <div>{{#if showCreatedOn}}Created On: {{createdOn}}{{/if}}</div>
+        </div>
+
+        {{#if showFilters}}
+        <div class="filter-box">
+            <div class="filter-title">Filter Conditions</div>
+            {{#if filters}}
+            {{#each filters}}
+            <div class="filter-item">{{this.label}}: {{this.value}}</div>
+            {{/each}}
+            {{else}}
+            <div class="filter-item">-</div>
+            {{/if}}
+        </div>
+        {{/if}}
+    </div>
+
+    <table data-xlsx="true">
+        <thead>
+            <tr>
+                <th>Doc code</th>
+                <th>Invoice ID</th>
+                <th>Product ID</th>
+                <th>Product name</th>
+                <th class="text-right">Qty</th>
+                <th class="text-right">Pending qty</th>
+                <th class="text-right">Rate</th>
+                <th class="text-right">Gross amount</th>
+                <th class="text-right">Discount</th>
+                <th class="text-right">Tax amount</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{#each items}}
+            <tr>
+                <td>{{this.docCode}}</td>
+                <td>{{this.invoiceMainId}}</td>
+                <td>{{this.productId}}</td>
+                <td>{{this.productName}}</td>
+                <td class="text-right">{{this.qty}}</td>
+                <td class="text-right">{{this.pendingQty}}</td>
+                <td class="text-right">{{this.rate}}</td>
+                <td class="text-right">{{this.grossAmount}}</td>
+                <td class="text-right">{{this.discount}}</td>
+                <td class="text-right">{{this.taxAmount}}</td>
+            </tr>
+            {{/each}}
+        </tbody>
+    </table>
+
+    <div class="footer">
+        <div class="footer-left">{{#if showCreatedOn}}Generated: {{createdOn}}{{/if}}</div>
+        <div class="footer-right">
+            {{#if showPageInfo}}Page {{pageNo}} of {{totalPages}}{{/if}}
+        </div>
+    </div>
+</body>
+
+</html>
