@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>GRN Report</title>
+
+<style>
+
+@page{
+    margin:20mm;
+}
+
+body{
+    font-family: Arial, Helvetica, sans-serif;
+    margin:0;
+    color:#222;
+}
+
+/* HEADER */
+
+.header-table{
+    width:100%;
+    border-collapse:collapse;
+    border-bottom:4px solid #333;
+    margin-bottom:25px;
+}
+
+.header-table td{
+    vertical-align:top;
+    padding:15px;
+}
+
+.title{
+    text-align:center;
+}
+
+.title h1{
+    margin:0;
+    letter-spacing:2px;
+}
+
+/* ADDRESS */
+
+.address-table{
+    width:100%;
+    border-collapse:collapse;
+    margin-bottom:20px;
+}
+
+.address-table td{
+    vertical-align:top;
+    padding:10px;
+}
+
+.section-title{
+    font-size:12px;
+    font-weight:bold;
+    text-transform:uppercase;
+    margin-bottom:5px;
+}
+
+.address-text{
+    font-size:13px;
+    line-height:1.4;
+}
+
+/* META TABLE */
+
+.meta-table{
+    width:100%;
+    border-collapse:collapse;
+}
+
+.meta-table td{
+    padding:6px;
+    border:1px solid #ccc;
+    font-size:13px;
+}
+
+.meta-table td:first-child{
+    font-weight:bold;
+}
+
+/* ITEMS */
+
+.items-table{
+    width:100%;
+    border-collapse:collapse;
+    margin-bottom:25px;
+}
+
+.items-table th{
+    border:1px solid #333;
+    background-color:#444;
+    color:#fff;
+    font-size:12px;
+    padding:8px;
+    text-transform:uppercase;
+}
+
+.items-table td{
+    border:1px solid #ccc;
+    padding:8px;
+    font-size:13px;
+}
+
+.text-center{
+    text-align:center;
+}
+
+.text-right{
+    text-align:right;
+}
+
+/* TOTALS */
+
+.totals-table{
+    width:300px;
+    border-collapse:collapse;
+    margin-left:auto;
+}
+
+.totals-table td{
+    border:1px solid #ccc;
+    padding:8px;
+}
+
+.total-label{
+    background:#444;
+    color:#fff;
+    font-weight:bold;
+}
+
+.grand-total{
+    font-weight:bold;
+    font-size:16px;
+}
+
+/* FOOTER */
+
+.footer{
+    margin-top:30px;
+    border-top:1px solid #ccc;
+    padding-top:10px;
+    text-align:center;
+    font-size:12px;
+}
+
+thead{
+    display:table-header-group;
+}
+
+tr{
+    page-break-inside:avoid;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<!-- HEADER -->
+
+<table class="header-table">
+
+<tr>
+<td colspan="2" class="title">
+<h1>GOODS RECEIVED NOTE</h1>
+</td>
+</tr>
+
+<tr>
+
+<td>
+
+<strong>{{grnMainData.companyName}}</strong><br>
+{{grnMainData.companyAddress}}
+
+</td>
+
+<td style="text-align:right">
+
+<strong>GRN No:</strong>
+{{grnMainData.documentNumber}}
+<br>
+
+<strong>Date:</strong>
+{{grnMainData.documentDate}}
+
+</td>
+
+</tr>
+
+</table>
+
+<!-- SUPPLIER -->
+
+<table class="address-table">
+
+<tr>
+
+<td>
+
+<div class="section-title">Supplier</div>
+
+<div class="address-text">
+
+<strong>{{grnMainData.partyName}}</strong><br>
+{{grnMainData.partyAddress}}<br>
+{{grnMainData.contactPerson}}<br>
+{{grnMainData.contactNumber}}
+
+</div>
+
+</td>
+
+<td>
+
+<div class="section-title">Supplier DN</div>
+
+<table class="meta-table">
+
+<tr>
+<td>DN Number</td>
+<td>{{grnMainData.supplierDnNo}}</td>
+</tr>
+
+<tr>
+<td>DN Date</td>
+<td>{{grnMainData.supplierDnDate}}</td>
+</tr>
+
+<tr>
+<td>PO Numbers</td>
+<td>{{grnMainData.poDocCodes}}</td>
+</tr>
+
+</table>
+
+</td>
+
+<td>
+
+<div class="section-title">Currency</div>
+
+<table class="meta-table">
+
+<tr>
+<td>Currency ID</td>
+<td>{{grnMainData.currencyId}}</td>
+</tr>
+
+<tr>
+<td>Exchange Rate</td>
+<td>{{grnMainData.exchangeRate}}</td>
+</tr>
+
+<tr>
+<td>Branch ID</td>
+<td>{{grnMainData.branchId}}</td>
+</tr>
+
+</table>
+
+</td>
+
+</tr>
+
+</table>
+
+<!-- ITEMS -->
+
+<table class="items-table">
+
+<thead>
+
+<tr>
+
+<th>Product</th>
+<th>Description</th>
+<th>Brand</th>
+<th>Unit</th>
+<th>Qty</th>
+<th>Rate</th>
+<th>Gross</th>
+<th>Discount</th>
+<th>Tax</th>
+<th>Net</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+{{#each grnDetailsData}}
+
+<tr>
+
+<td>{{this.product}}</td>
+
+<td>
+{{this.description}}
+</td>
+
+<td class="text-center">
+{{this.brand}}
+</td>
+
+<td class="text-center">
+{{this.unit}}
+</td>
+
+<td class="text-center">
+{{this.qty}}
+</td>
+
+<td class="text-right">
+{{this.rate}}
+</td>
+
+<td class="text-right">
+{{this.grossAmount}}
+</td>
+
+<td class="text-right">
+{{this.discount}}
+</td>
+
+<td class="text-right">
+{{this.taxAmount}}
+</td>
+
+<td class="text-right">
+{{this.netAmount}}
+</td>
+
+</tr>
+
+<tr>
+
+<td colspan="10" style="font-size:12px">
+
+PO: {{this.poDocCode}} |
+PO Date: {{this.poDate}} |
+PO Detail ID: {{this.purchaseOrderDetailId}}
+
+</td>
+
+</tr>
+
+{{/each}}
+
+</tbody>
+
+</table>
+
+<!-- TOTALS -->
+
+<table class="totals-table">
+
+<tr>
+<td class="total-label">Gross</td>
+<td class="text-right">{{grnMainData.grossAmount}}</td>
+</tr>
+
+<tr>
+<td class="total-label">Discount</td>
+<td class="text-right">{{grnMainData.discountAmount}}</td>
+</tr>
+
+<tr>
+<td class="total-label">Tax</td>
+<td class="text-right">{{grnMainData.taxAmount}}</td>
+</tr>
+
+<tr class="grand-total">
+<td class="total-label">Total</td>
+<td class="text-right">{{grnMainData.totalAmount}}</td>
+</tr>
+
+</table>
+
+<!-- REMARKS -->
+
+<div style="margin-top:20px">
+
+<strong>Remarks:</strong><br>
+
+{{grnMainData.remarks}}
+
+</div>
+
+<!-- FOOTER -->
+
+<div class="footer">
+
+{{grnMainData.companyName}}
+
+</div>
+
+</body>
+</html>

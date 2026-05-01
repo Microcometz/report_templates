@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Purchase Invoice</title>
+
+<style>
+
+@page {
+    size: A4;
+    margin: 0;
+}
+
+body{
+    font-family: Arial, Helvetica, sans-serif;
+    margin:0;
+    background:#f8fafc;
+}
+
+.page{
+    width:210mm;
+    margin:auto;
+    padding:18mm;
+    background:white;
+    box-sizing:border-box;
+}
+
+/* HEADER */
+
+.header{
+    display:flex;
+    justify-content:space-between;
+    margin-bottom:30px;
+}
+
+.company h1{
+    margin:0;
+    font-size:22px;
+}
+
+.company p{
+    margin:3px 0;
+    font-size:13px;
+    color:#64748b;
+}
+
+.document-title{
+    font-size:28px;
+    font-weight:300;
+}
+
+/* SECTION TITLE */
+
+.section-title{
+    font-size:11px;
+    font-weight:bold;
+    text-transform:uppercase;
+    color:#3b82f6;
+    border-bottom:1px solid #e2e8f0;
+    margin-bottom:8px;
+}
+
+/* META TABLE */
+
+.meta-table{
+    width:100%;
+    border-collapse:collapse;
+    font-size:13px;
+}
+
+.meta-table td{
+    padding:6px 0;
+    border-bottom:1px solid #e2e8f0;
+}
+
+.meta-table td:first-child{
+    color:#64748b;
+}
+
+.meta-table td:last-child{
+    text-align:right;
+}
+
+/* ITEMS TABLE */
+
+.items{
+    width:100%;
+    border-collapse:collapse;
+    margin-top:20px;
+    margin-bottom:30px;
+}
+
+.items th{
+    background:#f1f5f9;
+    padding:10px;
+    font-size:12px;
+    text-transform:uppercase;
+}
+
+.items td{
+    padding:10px;
+    border-bottom:1px solid #e2e8f0;
+    font-size:14px;
+}
+
+.text-right{
+    text-align:right;
+}
+
+.text-center{
+    text-align:center;
+}
+
+/* TOTALS */
+
+.totals{
+    width:300px;
+    margin-left:auto;
+}
+
+.total-row{
+    display:flex;
+    justify-content:space-between;
+    padding:5px 0;
+}
+
+.grand-total{
+    border-top:2px solid black;
+    margin-top:8px;
+    padding-top:8px;
+    font-weight:bold;
+    font-size:18px;
+}
+
+/* FOOTER */
+
+.footer{
+    margin-top:40px;
+    border-top:1px solid #e2e8f0;
+    padding-top:12px;
+    font-size:12px;
+    text-align:center;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="page">
+
+<!-- HEADER -->
+
+<div class="header">
+
+<div class="company">
+<h1>{{piMainData.companyName}}</h1>
+<p>{{piMainData.companyAddress}}</p>
+</div>
+
+<div class="document-title">
+Purchase Invoice
+</div>
+
+</div>
+
+<!-- SUPPLIER + INVOICE DETAILS -->
+
+<table style="width:100%; margin-bottom:20px;">
+
+<tr>
+
+<td style="width:50%; vertical-align:top; padding-right:30px;">
+
+<div class="section-title">Supplier</div>
+
+<strong>{{piMainData.partyName}}</strong><br>
+<span>{{piMainData.contactPerson}}</span>
+
+</td>
+
+<td style="width:50%; vertical-align:top;">
+
+<div class="section-title">Invoice Details</div>
+
+<table class="meta-table">
+
+<tr>
+<td>Invoice No</td>
+<td>{{piMainData.documentNumber}}</td>
+</tr>
+
+<tr>
+<td>Date</td>
+<td>{{piMainData.documentDate}}</td>
+</tr>
+
+</table>
+
+</td>
+
+</tr>
+
+</table>
+
+<!-- ITEMS -->
+
+<table class="items">
+
+<thead>
+
+<tr>
+<th style="width:40%">Item</th>
+<th class="text-center">Qty</th>
+<th class="text-right">Rate</th>
+<th class="text-right">Tax</th>
+<th class="text-right">Total</th>
+</tr>
+
+</thead>
+
+<tbody>
+
+{{#each piDetailsData}}
+
+<tr>
+
+<td>
+<strong>{{this.product}}</strong>
+{{#if this.description}}
+<br>{{this.description}}
+{{/if}}
+</td>
+
+<td class="text-center">{{this.qty}}</td>
+<td class="text-right">{{this.rate}}</td>
+<td class="text-right">{{this.taxAmount}}</td>
+<td class="text-right">{{this.netAmount}}</td>
+
+</tr>
+
+{{/each}}
+
+</tbody>
+
+</table>
+
+<!-- TOTALS -->
+
+<div class="totals">
+
+<div class="total-row">
+<span>Subtotal</span>
+<span>{{piMainData.grossAmount}}</span>
+</div>
+
+<div class="total-row">
+<span>Tax</span>
+<span>{{piMainData.taxAmount}}</span>
+</div>
+
+<div class="total-row">
+<span>Discount</span>
+<span>{{piMainData.discountAmount}}</span>
+</div>
+
+<div class="total-row grand-total">
+<span>Total</span>
+<span>{{piMainData.totalAmount}}</span>
+</div>
+
+</div>
+
+<!-- FOOTER -->
+
+<div class="footer">
+
+<p>
+<strong>Notes:</strong>
+{{notes}}
+</p>
+
+<p style="margin-top:10px;">
+{{piMainData.companyName}}
+</p>
+
+</div>
+
+</div>
+
+</body>
+</html>
