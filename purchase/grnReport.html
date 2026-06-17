@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>GRN Report</title>
+<title>Purchase Order</title>
 
 <style>
 
@@ -12,8 +12,9 @@
 
 body{
     font-family: Arial, Helvetica, sans-serif;
-    margin:0;
+    margin:5mm;
     color:#222;
+     padding-bottom:60px;
 }
 
 /* HEADER */
@@ -26,20 +27,45 @@ body{
 }
 
 .header-table td{
-    vertical-align:top;
-    padding:15px;
+    width:50%;
+    vertical-align:middle;
+    text-align:center;
+    padding:20px;
 }
 
-.title{
+/* LEFT HEADER */
+
+.left-header{
     text-align:center;
 }
 
-.title h1{
+.logo{
+    max-height:70px;
+    max-width:150px;
+    object-fit:contain;
+    margin-bottom:10px;
+}
+
+.company-name{
+    font-weight:bold;
+    font-size:16px;
+    margin-bottom:5px;
+}
+
+/* RIGHT HEADER */
+
+.right-header h1{
     margin:0;
     letter-spacing:2px;
 }
 
-/* ADDRESS */
+.po-meta{
+    margin-top:12px;
+    font-size:13px;
+    line-height:1.6;
+}
+
+/* ADDRESS SECTION */
 
 .address-table{
     width:100%;
@@ -53,7 +79,7 @@ body{
 }
 
 .section-title{
-    font-size:12px;
+    font-size:15px;
     font-weight:bold;
     text-transform:uppercase;
     margin-bottom:5px;
@@ -81,7 +107,7 @@ body{
     font-weight:bold;
 }
 
-/* ITEMS */
+/* ITEMS TABLE */
 
 .items-table{
     width:100%;
@@ -92,7 +118,7 @@ body{
 .items-table th{
     border:1px solid #333;
     background-color:#444;
-    color:#fff;
+    color:#ffffff;
     font-size:12px;
     padding:8px;
     text-transform:uppercase;
@@ -114,6 +140,10 @@ body{
 
 /* TOTALS */
 
+.totals-wrapper{
+    width:100%;
+}
+
 .totals-table{
     width:300px;
     border-collapse:collapse;
@@ -121,13 +151,13 @@ body{
 }
 
 .totals-table td{
-    border:1px solid #ccc;
     padding:8px;
+    border:1px solid #ccc;
 }
 
 .total-label{
-    background:#444;
-    color:#fff;
+    background-color:#444;
+    color:#ffffff;
     font-weight:bold;
 }
 
@@ -139,12 +169,18 @@ body{
 /* FOOTER */
 
 .footer{
-    margin-top:30px;
+    position:fixed;
+    bottom:5mm;
+    left:0;
+    width:100%;
     border-top:1px solid #ccc;
     padding-top:10px;
     text-align:center;
     font-size:12px;
+    background:#fff;
 }
+
+/* PDF FIX */
 
 thead{
     display:table-header-group;
@@ -165,239 +201,114 @@ tr{
 <table class="header-table">
 
 <tr>
-<td colspan="2" class="title">
-<h1>GOODS RECEIVED NOTE</h1>
-</td>
-</tr>
 
-<tr>
+<td class="left-header">
 
-<td>
+<img class="logo" src="data:image/png;base64,{{image}}" alt="logo"/>
 
-<strong>{{grnMainData.companyName}}</strong><br>
+<div class="company-name">
+{{grnMainData.companyName}}
+</div>
+
+<div>
 {{grnMainData.companyAddress}}
+</div>
 
-</td>
-
-<td style="text-align:right">
-
-<strong>GRN No:</strong>
-{{grnMainData.documentNumber}}
-<br>
-
-<strong>Date:</strong>
-{{grnMainData.documentDate}}
-
-</td>
-
-</tr>
-
-</table>
-
-<!-- SUPPLIER -->
-
-<table class="address-table">
-
-<tr>
-
-<td>
-
-<div class="section-title">Supplier</div>
-
-<div class="address-text">
-
-<strong>{{grnMainData.partyName}}</strong><br>
-{{grnMainData.partyAddress}}<br>
-{{grnMainData.contactPerson}}<br>
-{{grnMainData.contactNumber}}
-
+<div>
+{{grnMainData.email}}
 </div>
 
 </td>
 
-<td>
+<td class="right-header">
 
-<div class="section-title">Supplier DN</div>
+<h1>PURCHASE ORDER</h1>
 
-<table class="meta-table">
-
-<tr>
-<td>DN Number</td>
-<td>{{grnMainData.supplierDnNo}}</td>
-</tr>
-
-<tr>
-<td>DN Date</td>
-<td>{{grnMainData.supplierDnDate}}</td>
-</tr>
-
-<tr>
-<td>PO Numbers</td>
-<td>{{grnMainData.poDocCodes}}</td>
-</tr>
-
-</table>
-
-</td>
-
-<td>
-
-<div class="section-title">Currency</div>
-
-<table class="meta-table">
-
-<tr>
-<td>Currency ID</td>
-<td>{{grnMainData.currencyId}}</td>
-</tr>
-
-<tr>
-<td>Exchange Rate</td>
-<td>{{grnMainData.exchangeRate}}</td>
-</tr>
-
-<tr>
-<td>Branch ID</td>
-<td>{{grnMainData.branchId}}</td>
-</tr>
-
-</table>
+<div class="po-meta">
+<strong>PO NUMBER:</strong> {{grnMainData.docCode}}<br>
+<strong>Date:</strong> {{grnMainData.docDate}}
+</div>
 
 </td>
 
 </tr>
 
+</table>
+
+<!-- REMAINING CODE SAME -->
+
+<!-- ADDRESS -->
+
+<table class="address-table">
+<tr>
+<td>
+<div class="section-title">Vendor</div>
+<div class="address-text">
+<strong>{{grnMainData.supplier}}</strong><br>
+{{grnMainData.address}}<br>
+{{grnMainData.mobile}}
+</div>
+</td>
+
+<td>
+<div class="section-title">Ship To</div>
+<div class="address-text">
+<strong>{{grnMainData.companyName}}</strong><br>
+{{grnMainData.shippingAddress}}<br>
+{{grnMainData.email}}
+</div>
+</td>
+
+<td>
+<div class="section-title">Order Details</div>
+<table class="meta-table">
+<tr><td>Shipment Terms</td><td>{{grnMainData.shipmentTerms}}</td></tr>
+<tr><td>Delivery Terms</td><td>{{grnMainData.deliveryTerms}}</td></tr>
+<tr><td>Payment Terms</td><td>{{grnMainData.paymentTerms}}</td></tr>
+</table>
+</td>
+</tr>
 </table>
 
 <!-- ITEMS -->
 
 <table class="items-table">
-
 <thead>
-
 <tr>
-
-<th>Product</th>
-<th>Description</th>
-<th>Brand</th>
-<th>Unit</th>
-<th>Qty</th>
-<th>Rate</th>
-<th>Gross</th>
-<th>Discount</th>
-<th>Tax</th>
-<th>Net</th>
-
+<th width="40%">Description</th>
+<th width="15%">Qty</th>
+<th width="20%">Unit Price</th>
+<th width="25%">Total</th>
 </tr>
-
 </thead>
 
 <tbody>
-
 {{#each grnDetailsData}}
-
 <tr>
-
-<td>{{this.product}}</td>
-
 <td>
-{{this.description}}
+<strong>{{this.product}}</strong>
+{{#if this.description}}<br>{{this.description}}{{/if}}
 </td>
-
-<td class="text-center">
-{{this.brand}}
-</td>
-
-<td class="text-center">
-{{this.unit}}
-</td>
-
-<td class="text-center">
-{{this.qty}}
-</td>
-
-<td class="text-right">
-{{this.rate}}
-</td>
-
-<td class="text-right">
-{{this.grossAmount}}
-</td>
-
-<td class="text-right">
-{{this.discount}}
-</td>
-
-<td class="text-right">
-{{this.taxAmount}}
-</td>
-
-<td class="text-right">
-{{this.netAmount}}
-</td>
-
+<td class="text-center">{{this.qty}}</td>
+<td class="text-right">{{this.rate}}</td>
+<td class="text-right">{{this.grossAmount}}</td>
 </tr>
-
-<tr>
-
-<td colspan="10" style="font-size:12px">
-
-PO: {{this.poDocCode}} |
-PO Date: {{this.poDate}} |
-PO Detail ID: {{this.purchaseOrderDetailId}}
-
-</td>
-
-</tr>
-
 {{/each}}
-
 </tbody>
-
 </table>
 
 <!-- TOTALS -->
 
+<div class="totals-wrapper">
 <table class="totals-table">
-
-<tr>
-<td class="total-label">Gross</td>
-<td class="text-right">{{grnMainData.grossAmount}}</td>
-</tr>
-
-<tr>
-<td class="total-label">Discount</td>
-<td class="text-right">{{grnMainData.discountAmount}}</td>
-</tr>
-
-<tr>
-<td class="total-label">Tax</td>
-<td class="text-right">{{grnMainData.taxAmount}}</td>
-</tr>
-
-<tr class="grand-total">
-<td class="total-label">Total</td>
-<td class="text-right">{{grnMainData.totalAmount}}</td>
-</tr>
-
+<tr><td class="total-label">Subtotal</td><td class="text-right">{{grnMainData.grossAmount}}</td></tr>
+<tr><td class="total-label">Tax</td><td class="text-right">{{grnMainData.taxAmount}}</td></tr>
+<tr class="grand-total"><td class="total-label">TOTAL</td><td class="text-right">{{grnMainData.totalAmount}}</td></tr>
 </table>
-
-<!-- REMARKS -->
-
-<div style="margin-top:20px">
-
-<strong>Remarks:</strong><br>
-
-{{grnMainData.remarks}}
-
 </div>
 
-<!-- FOOTER -->
-
 <div class="footer">
-
 {{grnMainData.companyName}}
-
 </div>
 
 </body>
