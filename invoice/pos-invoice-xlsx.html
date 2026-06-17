@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+<!--
+  Tabular export for POS invoice lines — same Handlebars context as invoice.html (invoiceDetailsData, invoiceMainData).
+-->
+<table data-xlsx="true">
+    <thead>
+        <tr>
+            <th>Doc code</th>
+            <th>Doc date</th>
+            <th>Customer</th>
+            <th>Product</th>
+            <th>Qty</th>
+            <th>Rate</th>
+            <th>Gross</th>
+            <th>Disc</th>
+            <th>Tax</th>
+            <th>Net total</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{#each invoiceDetailsData}}
+        <tr>
+            <td>{{../invoiceMainData.docCode}}</td>
+            <td>{{../invoiceMainData.docDate}}</td>
+            <td>{{../invoiceMainData.customer}}</td>
+            <td>{{this.product}}</td>
+            <td>{{#if this.qty}}{{this.qty}}{{else}}0{{/if}}</td>
+            <td>{{#if this.rate}}{{this.rate}}{{else}}0.00{{/if}}</td>
+            <td>{{#if this.grossAmount}}{{this.grossAmount}}{{else}}0.00{{/if}}</td>
+            <td>{{#if this.discount}}{{this.discount}}{{else}}0.00{{/if}}</td>
+            <td>{{#if this.taxAmount}}{{this.taxAmount}}{{else}}0.00{{/if}}</td>
+            <td>{{#if this.netAmount}}{{this.netAmount}}{{else}}0.00{{/if}}</td>
+        </tr>
+        {{/each}}
+    </tbody>
+</table>
+</body>
+</html>
