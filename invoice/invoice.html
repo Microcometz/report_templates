@@ -105,6 +105,7 @@ table{
 <td class="company-cell">
 <b>{{companyName}}</b><br>
 {{companyAddress}}<br>
+{{#if billingBranchName}}Branch: {{billingBranchName}}<br>{{/if}}
 {{#if companyPhone}}Phone: {{companyPhone}}<br>{{/if}}
 {{#if companyGstin}}GSTIN: {{companyGstin}}{{/if}}
 </td>
@@ -116,9 +117,9 @@ table{
 <div class="meta">
 Date : {{main.docDate}}<br>
 Invoice : {{main.docCode}}<br>
+{{#if invoiceBranchName}}Branch : {{invoiceBranchName}}<br>{{/if}}
 Customer : {{main.customer}}<br>
 {{#if main.mobile}}Phone : {{main.mobile}}<br>{{/if}}
-{{#if branchName}}Branch : {{branchName}}<br>{{/if}}
 {{#if main.invoiceType}}Type : {{main.invoiceType}}{{/if}}
 </div>
 

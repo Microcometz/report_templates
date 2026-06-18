@@ -139,7 +139,9 @@ body{
 <h1>TAX INVOICE</h1>
 </td>
 <td style="width:25%;text-align:right;">
-<strong>Invoice</strong><br>{{main.docCode}}<br><br>
+<strong>Invoice</strong><br>{{main.docCode}}
+{{#if invoiceBranchName}}<br>Branch: {{invoiceBranchName}}{{/if}}
+<br><br>
 <strong>Date</strong><br>{{main.docDate}}
 </td>
 </tr>
@@ -147,6 +149,7 @@ body{
 <td colspan="3">
 <span class="company-name">{{companyName}}</span><br>
 {{companyAddress}}<br>
+{{#if billingBranchName}}Branch: {{billingBranchName}}<br>{{/if}}
 {{#if companyPhone}}Phone: {{companyPhone}} &nbsp;{{/if}}
 {{#if companyEmail}}Email: {{companyEmail}}<br>{{/if}}
 {{#if companyGstin}}GSTIN: {{companyGstin}} &nbsp;{{/if}}
@@ -166,7 +169,6 @@ body{
 </td>
 <td>
 <div class="section-title">Invoice Details</div>
-{{#if branchName}}<strong>Branch:</strong> {{branchName}}<br>{{/if}}
 {{#if main.department}}<strong>Department:</strong> {{main.department}}<br>{{/if}}
 {{#if main.invoiceType}}<strong>Payment:</strong> {{main.invoiceType}}<br>{{/if}}
 {{#if companyCrNumber}}<strong>CR No:</strong> {{companyCrNumber}}<br>{{/if}}
