@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8" />
+    <style>
+        /* ===================================================================
+           openhtmltopdf 1.1.x  /  Flying Saucer  paged-media template
+           -------------------------------------------------------------------
+           Engine-specific notes (NOT generic CSS):
+
+             * The per-page running footer lives inside <tfoot> with
+               display:table-footer-group.  openhtmltopdf re-emits the
+               tfoot at the BOTTOM of every page that the table spans,
+               BELOW the last visible body row.  Because tfoot is part
+               of the table layout, the engine reserves space for it
+               automatically -> the footer can never overlap rows.
+               (position:fixed footers were used previously but they
+               render on top of content if the bottom margin is short.)
+
+             * counter(page) and counter(pages) ARE resolved per page
+               inside tfoot pseudo-elements, so "Page 1 of N",
+               "Page 2 of N", ... appears automatically without any
+               pageNo / totalPages being passed in the data payload.
+
+             * <thead> repeats on every page when display is
+               table-header-group (default for thead).
+
+             * Flexbox / CSS variables / box-shadow are unreliable in
+               openhtmltopdf 1.x -> table-cell layout is used instead
+               wherever a row of items is needed.
+
+             * @page { size: A4; margin: ... } is honored properly:
+               margins are reserved on every page (top, right, bottom,
+               left).  If the Java side sets margins via
+               PdfRendererBuilder it overrides these values.
+           =================================================================== */
+
+        /* IMPORTANT: openhtmltopdf 1.1.x silently fails to parse the
+           `margin: a b c d` SHORTHAND inside @page in some builds.
+           Splitting into per-side properties always works. */
+        @page {
+            size: A4 portrait;
+            margin-top:    20mm;
+            margin-right:  15mm;
+            margin-bottom: 18mm;
+            margin-left:   15mm;
+        }
+
+        /* targeted reset (a global * { ... } reset has been observed to
+           interfere with @page margin computation in some openhtmltopdf
+           builds, so we only reset the elements we actually use) */
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+            background: #fff;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            color: #222;
+            font-size: 12px;
+        }
+
+        h1, h2, h3, h4, h5, h6, p, ul, ol, li, table {
+            margin: 0;
+            padding: 0;
+        }
+
+        /* ---------- First-page header (renders once, on page 1) ---------- */
+        .first-page-header {
+            margin-bottom: 12px;
+            page-break-inside: avoid;
+            page-break-after: avoid;
+        }
+
+        .logo-wrap {
+            text-align: center;
+            margin-bottom: 8px;
+        }
+
+        .logo-wrap img {
+            max-height: 55px;
+            max-width: 180px;
+        }
+
+        .report-title {
+            text-align: center;
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        /* table-cell layout (flexbox unreliable in openhtmltopdf 1.x) */
+        .meta-row {
+            display: table;
+            width: 100%;
+            margin-bottom: 8px;
+            font-size: 11px;
+        }
+
+        .meta-cell {
+            display: table-cell;
+        }
+
+        .meta-cell-right {
+            display: table-cell;
+            text-align: right;
+        }
+
+        .filter-box {
+            border: 1px solid #d7dbe3;
+            padding: 8px;
+            margin-bottom: 12px;
+            page-break-inside: avoid;
+        }
+
+        .filter-title {
+            font-weight: bold;
+            margin-bottom: 6px;
+        }
+
+        .filter-item {
+            margin-bottom: 2px;
+            font-size: 11px;
+        }
+
+        /* ---------- Print-safe paginated table (openhtmltopdf) ----------
+           Three engine-specific settings combine to make thead repeat
+           on every page:
+
+             1. `-fs-table-paginate: paginate`  - openhtmltopdf-only
+                CSS extension that explicitly instructs the engine to
+                paginate the table and re-emit thead/tfoot at every
+                page break.  In openhtmltopdf 1.1.x the default behavior
+                is sometimes "do not paginate", so we set it explicitly.
+
+             2. `border-collapse: separate`  - openhtmltopdf 1.1.x has
+                known bugs where `collapse` can suppress thead repeat.
+                `separate` with per-cell borders gives the same look
+                without that quirk.
+
+             3. `display: table-header-group` on <thead>  - the standard
+                CSS-3 way to mark the header for repetition. */
+        /* table-layout: fixed + <colgroup> % widths so columns keep a
+           stable split; overflow-wrap lets long text wrap inside each
+           column instead of forcing the table wider than the page. */
+        table {
+            width: 100%;
+            table-layout: fixed;
+            border-collapse: separate;
+            border-spacing: 0;
+            -fs-table-paginate: paginate;
+            page-break-inside: auto;
+        }
+
+        col.col-inv {
+            width: 22%;
+        }
+
+        col.col-product {
+            width: 18%;
+        }
+
+        col.col-qty {
+            width: 7%;
+        }
+
+        col.col-rate {
+            width: 10%;
+        }
+
+        col.col-discount {
+            width: 10%;
+        }
+
+        col.col-tax {
+            width: 10%;
+        }
+
+        col.col-gross {
+            width: 12%;
+        }
+
+        col.col-pending {
+            width: 9%;
+        }
+
+        thead {
+            display: table-header-group;
+        }
+
+        tbody {
+            display: table-row-group;
+        }
+
+        /* tfoot is the per-page running footer.  display:table-footer-group
+           makes openhtmltopdf re-emit it at the BOTTOM of every page that
+           contains a row of this table, naturally below the last body
+           row.  Because it is part of the table, layout reserves space
+           for it - it can never overlap data. */
+        tfoot {
+            display: table-footer-group;
+        }
+
+        tr {
+            page-break-inside: avoid;
+        }
+
+        /* per-cell borders so every row stays "closed" at page breaks */
+        th,
+        td {
+            padding: 7px 8px;
+            border-right:  1px solid #d7dbe3;
+            border-bottom: 1px solid #d7dbe3;
+            font-size: 12px;
+            vertical-align: top;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            word-break: break-word;
+        }
+
+        /* outer left + top edges (separate-mode equivalent of an outer
+           table border) */
+        th.first-col,
+        td.first-col {
+            border-left: 1px solid #d7dbe3;
+        }
+
+        thead th {
+            border-top: 1px solid #d7dbe3;
+        }
+
+        th {
+            background-color: #f3f6fb;
+            text-align: left;
+            font-weight: bold;
+        }
+
+        .text-right {
+            text-align: right;
+        }
+
+        /* ---------- Per-page running footer (tfoot) ----------
+           The cell spans all 5 columns and gets a clean look (no grid
+           borders, just a single top separator).  Inside the cell we
+           use a CSS table to put "Generated: ..." on the left and
+           "Page X of Y" on the right.  counter(page) / counter(pages)
+           are resolved per page by openhtmltopdf, so no pageNo /
+           totalPages is needed in the data payload. */
+        tfoot td.page-footer-cell {
+            border-top:    1px solid #d7dbe3;
+            border-right:  none;
+            border-bottom: none;
+            border-left:   none;
+            padding: 6px 0 0 0;
+            font-size: 10px;
+            color: #555;
+            background: #fff;
+        }
+
+        .page-footer-row {
+            display: table;
+            width: 100%;
+            table-layout: fixed;
+        }
+
+        .page-footer-left {
+            display: table-cell;
+            text-align: left;
+        }
+
+        .page-footer-right {
+            display: table-cell;
+            text-align: right;
+        }
+
+        .pageno::before {
+            content: counter(page);
+        }
+
+        .pages::before {
+            content: counter(pages);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="first-page-header">
+        {{#if showLogo}}
+        <div class="logo-wrap">
+            <img src="{{logo}}" alt="logo" />
+        </div>
+        {{/if}}
+
+        <div class="report-title">{{reportTitle}}</div>
+
+        <div class="meta-row">
+            <div class="meta-cell">{{#if showCreatedBy}}Created By: {{createdBy}}{{/if}}</div>
+            <div class="meta-cell-right">{{#if showCreatedOn}}Created On: {{createdOn}}{{/if}}</div>
+        </div>
+
+        {{#if showFilters}}
+        <div class="filter-box">
+            <div class="filter-title">Filter Conditions</div>
+            {{#if filters}}
+            {{#each filters}}
+            <div class="filter-item">{{this.label}}: {{this.value}}</div>
+            {{/each}}
+            {{else}}
+            <div class="filter-item">-</div>
+            {{/if}}
+        </div>
+        {{/if}}
+    </div>
+
+    <table>
+        <colgroup>
+            <col class="col-inv" />
+            <col class="col-product" />
+            <col class="col-qty" />
+            <col class="col-rate" />
+            <col class="col-discount" />
+            <col class="col-tax" />
+            <col class="col-gross" />
+            <col class="col-pending" />
+        </colgroup>
+        <thead>
+            <tr>
+                <th class="first-col">Invoice</th>
+                <th>Product</th>
+                <th class="text-right">Qty</th>
+                <th class="text-right">Rate</th>
+                <th class="text-right">Discount</th>
+                <th class="text-right">Tax</th>
+                <th class="text-right">Gross</th>
+                <th class="text-right">P.Qty</th>
+            </tr>
+        </thead>
+        {{!-- tfoot is declared before tbody so paginated engines pick it
+              up as the running footer.  openhtmltopdf re-emits this row
+              at the bottom of every page the table spans, BELOW the
+              last body row -> guaranteed never to overlap data. --}}
+        <tfoot>
+            <tr>
+                <td class="page-footer-cell" colspan="8">
+                    <div class="page-footer-row">
+                        <div class="page-footer-left">
+                            {{#if showCreatedOn}}Generated: {{createdOn}}{{/if}}
+                        </div>
+                        <div class="page-footer-right">
+                            {{#if showPageInfo}}Page <span class="pageno"></span> of <span class="pages"></span>{{/if}}
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        </tfoot>
+        <tbody>
+            {{#each items}}
+            <tr>
+                <td class="first-col">{{this.docCode}}</td>
+                <td>{{this.productName}}</td>
+                <td class="text-right">{{this.qty}}</td>
+                <td class="text-right">{{this.rate}}</td>
+                <td class="text-right">{{this.discount}}</td>
+                <td class="text-right">{{this.taxAmount}}</td>
+                <td class="text-right">{{this.grossAmount}}</td>
+                <td class="text-right">{{this.pendingQty}}</td>
+            </tr>
+            {{/each}}
+        </tbody>
+    </table>
+</body>
+
+</html>
