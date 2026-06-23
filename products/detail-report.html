@@ -160,7 +160,7 @@
         }
 
         col.col-product {
-            width: 18%;
+            width: 29%;
         }
 
         col.col-qty {
@@ -181,10 +181,6 @@
 
         col.col-gross {
             width: 12%;
-        }
-
-        col.col-pending {
-            width: 9%;
         }
 
         thead {
@@ -324,7 +320,6 @@
             <col class="col-discount" />
             <col class="col-tax" />
             <col class="col-gross" />
-            <col class="col-pending" />
         </colgroup>
         <thead>
             <tr>
@@ -343,7 +338,7 @@
               last body row -> guaranteed never to overlap data. --}}
         <tfoot>
             <tr>
-                <td class="page-footer-cell" colspan="8">
+                <td class="page-footer-cell" colspan="7">
                     <div class="page-footer-row">
                         <div class="page-footer-left">
                             {{#if showCreatedOn}}Generated: {{createdOn}}{{/if}}
