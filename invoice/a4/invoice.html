@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Sales Invoice</title>
+
+<style>
+
+@page{
+    margin:15mm;
+}
+
+body{
+    font-family: Arial, Helvetica, sans-serif;
+    margin:0;
+    color:#222;
+    font-size:13px;
+}
+
+.header-table{
+    width:100%;
+    border-collapse:collapse;
+    border-bottom:3px solid #333;
+    margin-bottom:20px;
+}
+
+.header-table td{
+    vertical-align:top;
+    padding:12px 8px;
+}
+
+.logo{
+    max-width:120px;
+    max-height:60px;
+}
+
+.title{
+    text-align:center;
+}
+
+.title h1{
+    margin:0;
+    font-size:22px;
+    letter-spacing:1px;
+}
+
+.company-name{
+    font-size:16px;
+    font-weight:bold;
+}
+
+.meta-table{
+    width:100%;
+    border-collapse:collapse;
+    margin-bottom:18px;
+}
+
+.meta-table td{
+    vertical-align:top;
+    width:50%;
+    padding:8px;
+}
+
+.section-title{
+    font-weight:bold;
+    text-transform:uppercase;
+    font-size:11px;
+    color:#555;
+    margin-bottom:4px;
+}
+
+.items-table{
+    width:100%;
+    border-collapse:collapse;
+}
+
+.items-table th{
+    background:#444;
+    color:#fff;
+    padding:8px 6px;
+    font-size:11px;
+    text-transform:uppercase;
+}
+
+.items-table td{
+    border:1px solid #ddd;
+    padding:7px 6px;
+    font-size:12px;
+}
+
+.text-right{ text-align:right; }
+.text-center{ text-align:center; }
+
+.totals-wrap{
+    margin-top:18px;
+    width:100%;
+}
+
+.totals-table{
+    width:45%;
+    margin-left:auto;
+    border-collapse:collapse;
+}
+
+.totals-table td{
+    padding:6px 8px;
+    border-bottom:1px solid #eee;
+}
+
+.totals-table tr.net td{
+    font-weight:bold;
+    font-size:14px;
+    border-top:2px solid #333;
+    border-bottom:none;
+}
+
+.footer{
+    margin-top:28px;
+    border-top:1px solid #ccc;
+    padding-top:12px;
+    text-align:center;
+    font-size:11px;
+    color:#666;
+}
+
+</style>
+</head>
+
+<body>
+
+<table class="header-table">
+<tr>
+<td style="width:25%;">
+{{#if image}}
+<img class="logo" src="data:image/png;base64,{{image}}" alt="logo"/>
+{{/if}}
+</td>
+<td style="width:50%;" class="title">
+<h1>TAX INVOICE</h1>
+</td>
+<td style="width:25%;text-align:right;">
+<strong>Invoice</strong><br>{{main.docCode}}
+{{#if invoiceBranchName}}<br>Branch: {{invoiceBranchName}}{{/if}}
+<br><br>
+<strong>Date</strong><br>{{main.docDate}}
+</td>
+</tr>
+<tr>
+<td colspan="3">
+<span class="company-name">{{companyName}}</span><br>
+{{companyAddress}}<br>
+{{#if billingBranchName}}Branch: {{billingBranchName}}<br>{{/if}}
+{{#if companyPhone}}Phone: {{companyPhone}} &nbsp;{{/if}}
+{{#if companyEmail}}Email: {{companyEmail}}<br>{{/if}}
+{{#if companyGstin}}GSTIN: {{companyGstin}} &nbsp;{{/if}}
+{{#if companyPan}}PAN: {{companyPan}}{{/if}}
+</td>
+</tr>
+</table>
+
+<table class="meta-table">
+<tr>
+<td>
+<div class="section-title">Bill To</div>
+<strong>{{main.customer}}</strong><br>
+{{#if main.mobile}}Phone: {{main.mobile}}<br>{{/if}}
+{{#if main.partyName}}Party: {{main.partyName}}<br>{{/if}}
+{{#if main.contactPerson}}Contact: {{main.contactPerson}}{{/if}}
+</td>
+<td>
+<div class="section-title">Invoice Details</div>
+{{#if main.department}}<strong>Department:</strong> {{main.department}}<br>{{/if}}
+{{#if main.invoiceType}}<strong>Payment:</strong> {{main.invoiceType}}<br>{{/if}}
+{{#if companyCrNumber}}<strong>CR No:</strong> {{companyCrNumber}}<br>{{/if}}
+{{#if companyPincode}}<strong>Pincode:</strong> {{companyPincode}}{{/if}}
+</td>
+</tr>
+</table>
+
+<table class="items-table">
+<thead>
+<tr>
+<th style="width:32%;">Product</th>
+<th class="text-center" style="width:8%;">Qty</th>
+<th class="text-right" style="width:12%;">Rate</th>
+<th class="text-right" style="width:12%;">Gross</th>
+<th class="text-right" style="width:10%;">Disc</th>
+<th class="text-right" style="width:10%;">Tax</th>
+<th class="text-right" style="width:16%;">Net</th>
+</tr>
+</thead>
+<tbody>
+{{#each details}}
+<tr>
+<td>{{this.product}}</td>
+<td class="text-center">{{#if this.qty}}{{this.qty}}{{else}}0{{/if}}</td>
+<td class="text-right">{{#if this.rate}}{{this.rate}}{{else}}0.00{{/if}}</td>
+<td class="text-right">{{#if this.grossAmount}}{{this.grossAmount}}{{else}}0.00{{/if}}</td>
+<td class="text-right">{{#if this.discount}}{{this.discount}}{{else}}0.00{{/if}}</td>
+<td class="text-right">{{#if this.taxAmount}}{{this.taxAmount}}{{else}}0.00{{/if}}</td>
+<td class="text-right">{{#if this.netAmount}}{{this.netAmount}}{{else}}0.00{{/if}}</td>
+</tr>
+{{/each}}
+</tbody>
+</table>
+
+<div class="totals-wrap">
+<table class="totals-table">
+<tr>
+<td class="text-right">Gross Total</td>
+<td class="text-right">{{#if main.grossAmount}}{{main.grossAmount}}{{else}}0.00{{/if}}</td>
+</tr>
+{{#if main.itemDiscount}}
+<tr>
+<td class="text-right">Item Discount</td>
+<td class="text-right">-{{main.itemDiscount}}</td>
+</tr>
+{{/if}}
+{{#if main.invoiceDiscount}}
+<tr>
+<td class="text-right">Invoice Discount</td>
+<td class="text-right">-{{main.invoiceDiscount}}</td>
+</tr>
+{{/if}}
+{{#if main.couponDiscount}}
+<tr>
+<td class="text-right">Coupon Discount</td>
+<td class="text-right">-{{main.couponDiscount}}</td>
+</tr>
+{{/if}}
+<tr>
+<td class="text-right">Tax</td>
+<td class="text-right">{{#if main.taxAmount}}{{main.taxAmount}}{{else}}0.00{{/if}}</td>
+</tr>
+{{#if main.roundOff}}
+<tr>
+<td class="text-right">Round Off</td>
+<td class="text-right">{{main.roundOff}}</td>
+</tr>
+{{/if}}
+<tr class="net">
+<td class="text-right">Net Amount</td>
+<td class="text-right">{{#if main.invoiceTotal}}{{main.invoiceTotal}}{{else}}0.00{{/if}}</td>
+</tr>
+</table>
+</div>
+
+<div class="footer">
+Thank you for your business.
+{{#if mikroTagline}}<br>{{mikroTagline}}{{/if}}
+{{#if createdOn}}<br>Generated on {{createdOn}}{{#if createdBy}} by {{createdBy}}{{/if}}{{/if}}
+</div>
+
+</body>
+</html>

@@ -13,8 +13,6 @@ body{
     margin-right:3mm;
 }
 
-/* Table Setup */
-
 table{
     width:100%;
     border-collapse:collapse;
@@ -24,8 +22,6 @@ table{
 .center{ text-align:center; }
 .left{ text-align:left; }
 .right{ text-align:right; }
-
-/* Header Layout */
 
 .header-layout{
     width:100%;
@@ -46,11 +42,9 @@ table{
 }
 
 .logo{
-    width:75px;
-    height:25px;
+    max-width:75px;
+    max-height:40px;
 }
-
-/* Header Table */
 
 .header-table th{
     font-weight:normal;
@@ -58,8 +52,6 @@ table{
     padding-bottom:5px;
     font-size:10px;
 }
-
-/* Item */
 
 .item-name{
     padding-top:8px;
@@ -71,8 +63,6 @@ table{
     padding-bottom:8px;
 }
 
-/* Totals */
-
 .totals-table{
     margin-top:10px;
     border-top:1px solid #000;
@@ -83,15 +73,15 @@ table{
     padding:2px 0;
 }
 
-/* Footer */
-
 .footer{
     text-align:center;
     margin-top:15px;
     font-size:12px;
 }
 
-/* Divider */
+.meta{
+    font-size:11px;
+}
 
 .line{
     border-top:1px dashed #000;
@@ -105,51 +95,37 @@ table{
 
 <div class="receipt">
 
-<!-- Company Header -->
-
 <table class="header-layout">
-
 <tr>
-
 <td class="logo-cell">
+{{#if image}}
 <img class="logo" src="data:image/png;base64,{{image}}" alt="logo"/>
+{{/if}}
 </td>
-
 <td class="company-cell">
-
-<b>{{invoiceMainData.companyName}}</b><br>
-
-{{invoiceMainData.companyAddress}}<br>
-
-Phone: {{invoiceMainData.companyPhone}}
-
+<b>{{companyName}}</b><br>
+{{companyAddress}}<br>
+{{#if billingBranchName}}Branch: {{billingBranchName}}<br>{{/if}}
+{{#if companyPhone}}Phone: {{companyPhone}}<br>{{/if}}
+{{#if companyGstin}}GSTIN: {{companyGstin}}{{/if}}
 </td>
-
 </tr>
-
 </table>
 
 <div class="line"></div>
 
-<!-- Invoice Info -->
-
-<div>
-
-Date : {{invoiceMainData.docDate}} <br>
-
-Invoice : {{invoiceMainData.docCode}} <br>
-
-Customer : {{invoiceMainData.customer}} <br>
-
-Phone : {{invoiceMainData.mobile}}
-
+<div class="meta">
+Date : {{main.docDate}}<br>
+Invoice : {{main.docCode}}<br>
+{{#if invoiceBranchName}}Branch : {{invoiceBranchName}}<br>{{/if}}
+Customer : {{main.customer}}<br>
+{{#if main.mobile}}Phone : {{main.mobile}}<br>{{/if}}
+{{#if main.invoiceType}}Type : {{main.invoiceType}}{{/if}}
 </div>
 
 <div class="line"></div>
 
-
 <table>
-
 <tr class="header-table">
     <th class="left" width="14%">QTY</th>
     <th class="right" width="17%">RATE</th>
@@ -159,101 +135,71 @@ Phone : {{invoiceMainData.mobile}}
     <th class="right" width="20%">N.TOTAL</th>
 </tr>
 
-{{#each invoiceDetailsData}}
-
+{{#each details}}
 <tr>
 <td colspan="6">
 <span class="item-name">{{this.product}}</span>
 </td>
 </tr>
-
 <tr class="item-values">
-
 <td class="left">
 <div style="white-space:nowrap;">
 {{#if this.qty}}{{this.qty}}{{else}}0{{/if}} PCS
 </div>
 </td>
-
-<td class="right">
-{{#if this.rate}}{{this.rate}}{{else}}0.00{{/if}}
-</td>
-
-<td class="right">
-{{#if this.grossAmount}}{{this.grossAmount}}{{else}}0.00{{/if}}
-</td>
-
-<td class="right">
-{{#if this.discount}}{{this.discount}}{{else}}0.00{{/if}}
-</td>
-
-<td class="right">
-{{#if this.taxAmount}}{{this.taxAmount}}{{else}}0.00{{/if}}
-</td>
-
-<td class="right">
-{{#if this.netAmount}}{{this.netAmount}}{{else}}0.00{{/if}}
-</td>
-
+<td class="right">{{#if this.rate}}{{this.rate}}{{else}}0.00{{/if}}</td>
+<td class="right">{{#if this.grossAmount}}{{this.grossAmount}}{{else}}0.00{{/if}}</td>
+<td class="right">{{#if this.discount}}{{this.discount}}{{else}}0.00{{/if}}</td>
+<td class="right">{{#if this.taxAmount}}{{this.taxAmount}}{{else}}0.00{{/if}}</td>
+<td class="right">{{#if this.netAmount}}{{this.netAmount}}{{else}}0.00{{/if}}</td>
 </tr>
-
 {{/each}}
 
 </table>
 
-
 <table class="totals-table">
-
 <tr>
 <td class="right" style="width:70%;">Gross Total -</td>
-<td class="right">
-{{#if invoiceMainData.grossAmount}}{{invoiceMainData.grossAmount}}{{else}}0.00{{/if}}
-</td>
+<td class="right">{{#if main.grossAmount}}{{main.grossAmount}}{{else}}0.00{{/if}}</td>
 </tr>
-
+{{#if main.itemDiscount}}
 <tr>
 <td class="right">(-) Item Discount -</td>
-<td class="right">
-{{#if invoiceMainData.itemDiscount}}{{invoiceMainData.itemDiscount}}{{else}}0.00{{/if}}
-</td>
+<td class="right">{{main.itemDiscount}}</td>
 </tr>
-
+{{/if}}
+{{#if main.invoiceDiscount}}
 <tr>
 <td class="right">(-) Invoice Discount -</td>
-<td class="right">
-{{#if invoiceMainData.invoiceDiscount}}{{invoiceMainData.invoiceDiscount}}{{else}}0.00{{/if}}
-</td>
+<td class="right">{{main.invoiceDiscount}}</td>
 </tr>
-
+{{/if}}
+{{#if main.couponDiscount}}
 <tr>
 <td class="right">(-) Coupon Discount -</td>
-<td class="right">
-{{#if invoiceMainData.couponDiscount}}{{invoiceMainData.couponDiscount}}{{else}}0.00{{/if}}
-</td>
+<td class="right">{{main.couponDiscount}}</td>
 </tr>
-
+{{/if}}
 <tr>
 <td class="right">(-) Total Tax -</td>
-<td class="right">
-{{#if invoiceMainData.taxAmount}}{{invoiceMainData.taxAmount}}{{else}}0.00{{/if}}
-</td>
+<td class="right">{{#if main.taxAmount}}{{main.taxAmount}}{{else}}0.00{{/if}}</td>
 </tr>
-
+{{#if main.roundOff}}
+<tr>
+<td class="right">Round Off -</td>
+<td class="right">{{main.roundOff}}</td>
+</tr>
+{{/if}}
 <tr style="font-size:13px;font-weight:bold;">
 <td class="right">(=) Net Amount -</td>
-<td class="right">
-{{#if invoiceMainData.invoiceTotal}}{{invoiceMainData.invoiceTotal}}{{else}}0.00{{/if}}
-</td>
+<td class="right">{{#if main.invoiceTotal}}{{main.invoiceTotal}}{{else}}0.00{{/if}}</td>
 </tr>
-
 </table>
 
-
 <div class="footer">
-
 Thank you for shopping with us<br>
 VISIT AGAIN!
-
+{{#if createdOn}}<br><span style="font-size:9px;">Printed: {{createdOn}}{{#if createdBy}} by {{createdBy}}{{/if}}</span>{{/if}}
 </div>
 
 </div>
