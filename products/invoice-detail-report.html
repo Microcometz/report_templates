@@ -1,376 +1,442 @@
 <!DOCTYPE html>
 <html>
-
 <head>
-    <meta charset="UTF-8" />
-    <style>
-        /* ===================================================================
-           openhtmltopdf 1.1.x  /  Flying Saucer  paged-media template
-           -------------------------------------------------------------------
-           Engine-specific notes (NOT generic CSS):
+<meta charset="UTF-8">
+<title>GRN Detail Report</title>
 
-             * The per-page running footer lives inside <tfoot> with
-               display:table-footer-group.  openhtmltopdf re-emits the
-               tfoot at the BOTTOM of every page that the table spans,
-               BELOW the last visible body row.  Because tfoot is part
-               of the table layout, the engine reserves space for it
-               automatically -> the footer can never overlap rows.
-               (position:fixed footers were used previously but they
-               render on top of content if the bottom margin is short.)
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
 
-             * counter(page) and counter(pages) ARE resolved per page
-               inside tfoot pseudo-elements, so "Page 1 of N",
-               "Page 2 of N", ... appears automatically without any
-               pageNo / totalPages being passed in the data payload.
+body{
+    font-family: Arial, Helvetica, sans-serif;
+    color:#333;
+    font-size:13px;
+    background:#fff;
+}
 
-             * <thead> repeats on every page when display is
-               table-header-group (default for thead).
+.report{
+    width:100%;
+}
 
-             * Flexbox / CSS variables / box-shadow are unreliable in
-               openhtmltopdf 1.x -> table-cell layout is used instead
-               wherever a row of items is needed.
+/* ==========================
+    HEADER
+========================== */
 
-             * @page { size: A4; margin: ... } is honored properly:
-               margins are reserved on every page (top, right, bottom,
-               left).  If the Java side sets margins via
-               PdfRendererBuilder it overrides these values.
-           =================================================================== */
+.header{
+    border-bottom:3px solid #0d4c97;
+    padding-bottom:12px;
+    margin-bottom:20px;
+}
 
-        /* IMPORTANT: openhtmltopdf 1.1.x silently fails to parse the
-           `margin: a b c d` SHORTHAND inside @page in some builds.
-           Splitting into per-side properties always works. */
-        @page {
-            size: A4 portrait;
-            margin-top:    20mm;
-            margin-right:  15mm;
-            margin-bottom: 18mm;
-            margin-left:   15mm;
-        }
+.header-table{
+    width:100%;
+    border-collapse:collapse;
+}
 
-        /* targeted reset (a global * { ... } reset has been observed to
-           interfere with @page margin computation in some openhtmltopdf
-           builds, so we only reset the elements we actually use) */
-        html,
-        body {
-            margin: 0;
-            padding: 0;
-            background: #fff;
-        }
+.company{
+    width:40%;
+}
 
-        body {
-            font-family: Arial, sans-serif;
-            color: #222;
-            font-size: 12px;
-        }
+.title{
+    width:35%;
+    text-align:center;
+}
 
-        h1, h2, h3, h4, h5, h6, p, ul, ol, li, table {
-            margin: 0;
-            padding: 0;
-        }
+.info{
+    width:25%;
+}
 
-        /* ---------- First-page header (renders once, on page 1) ---------- */
-        .first-page-header {
-            margin-bottom: 12px;
-            page-break-inside: avoid;
-            page-break-after: avoid;
-        }
+.logo{
+    width:60px;
+    height:60px;
+    border:2px solid #0d4c97;
+    display:inline-block;
+    vertical-align:top;
+    margin-right:12px;
+}
 
-        .logo-wrap {
-            text-align: center;
-            margin-bottom: 8px;
-        }
+.company-details{
+    display:inline-block;
+    vertical-align:top;
+}
 
-        .logo-wrap img {
-            max-height: 55px;
-            max-width: 180px;
-        }
+.company-name{
+    font-size:24px;
+    color:#0d4c97;
+    font-weight:bold;
+    margin-bottom:5px;
+}
 
-        .report-title {
-            text-align: center;
-            font-size: 16px;
-            font-weight: bold;
-            margin-bottom: 10px;
-        }
+.company-address{
+    line-height:18px;
+    color:#666;
+}
 
-        /* table-cell layout (flexbox unreliable in openhtmltopdf 1.x) */
-        .meta-row {
-            display: table;
-            width: 100%;
-            margin-bottom: 8px;
-            font-size: 11px;
-        }
+.report-title{
+    display:inline-block;
+    background:#0d4c97;
+    color:#fff;
+    padding:14px 35px;
+    font-size:28px;
+    font-weight:bold;
+    border-radius:4px;
+}
 
-        .meta-cell {
-            display: table-cell;
-        }
+.info table{
+    width:100%;
+}
 
-        .meta-cell-right {
-            display: table-cell;
-            text-align: right;
-        }
+.info td{
+    padding:5px;
+}
 
-        .filter-box {
-            border: 1px solid #d7dbe3;
-            padding: 8px;
-            margin-bottom: 12px;
-            page-break-inside: avoid;
-        }
+/* ==========================
+        FILTER
+========================== */
 
-        .filter-title {
-            font-weight: bold;
-            margin-bottom: 6px;
-        }
+.filter{
+    border:1px solid #BFD5F0;
+    border-radius:6px;
+    margin-bottom:20px;
+}
 
-        .filter-item {
-            margin-bottom: 2px;
-            font-size: 11px;
-        }
+.filter-header{
+    background:#EDF5FF;
+    color:#0d4c97;
+    padding:10px 15px;
+    font-weight:bold;
+    border-bottom:1px solid #BFD5F0;
+}
 
-        /* ---------- Print-safe paginated table (openhtmltopdf) ----------
-           Three engine-specific settings combine to make thead repeat
-           on every page:
+.filter-body{
+    padding:15px;
+}
 
-             1. `-fs-table-paginate: paginate`  - openhtmltopdf-only
-                CSS extension that explicitly instructs the engine to
-                paginate the table and re-emit thead/tfoot at every
-                page break.  In openhtmltopdf 1.1.x the default behavior
-                is sometimes "do not paginate", so we set it explicitly.
+.filter-table{
+    width:100%;
+}
 
-             2. `border-collapse: separate`  - openhtmltopdf 1.1.x has
-                known bugs where `collapse` can suppress thead repeat.
-                `separate` with per-cell borders gives the same look
-                without that quirk.
+.filter-table td{
+    padding:8px;
+}
 
-             3. `display: table-header-group` on <thead>  - the standard
-                CSS-3 way to mark the header for repetition. */
-        /* table-layout: fixed + <colgroup> % widths so columns keep a
-           stable split; overflow-wrap lets long text wrap inside each
-           column instead of forcing the table wider than the page. */
-        table {
-            width: 100%;
-            table-layout: fixed;
-            border-collapse: separate;
-            border-spacing: 0;
-            -fs-table-paginate: paginate;
-            page-break-inside: auto;
-        }
+/* ==========================
+        TABLE
+========================== */
 
-        col.col-inv {
-            width: 22%;
-        }
+.data-table{
+    width:100%;
+    border-collapse:collapse;
+}
 
-        col.col-product {
-            width: 18%;
-        }
+.data-table thead{
+    background:#0d4c97;
+    color:white;
+}
 
-        col.col-qty {
-            width: 7%;
-        }
+.data-table th{
+    padding:12px;
+    text-align:left;
+}
 
-        col.col-rate {
-            width: 10%;
-        }
+.data-table td{
+    padding:10px 12px;
+    border-bottom:1px solid #ddd;
+}
 
-        col.col-discount {
-            width: 10%;
-        }
+.data-table tbody tr:nth-child(even){
+    background:#F7FAFF;
+}
 
-        col.col-tax {
-            width: 10%;
-        }
+.number{
+    text-align:right;
+}
 
-        col.col-gross {
-            width: 12%;
-        }
+/* ==========================
+        TOTALS
+========================== */
 
-        col.col-pending {
-            width: 9%;
-        }
+.summary{
+    margin-top:12px;
+    border:1px solid #BFD5F0;
+}
 
-        thead {
-            display: table-header-group;
-        }
+.summary table{
+    width:100%;
+    border-collapse:collapse;
+}
 
-        tbody {
-            display: table-row-group;
-        }
+.summary td{
+    padding:14px;
+    text-align:center;
+    border-right:1px solid #ddd;
+}
 
-        /* tfoot is the per-page running footer.  display:table-footer-group
-           makes openhtmltopdf re-emit it at the BOTTOM of every page that
-           contains a row of this table, naturally below the last body
-           row.  Because it is part of the table, layout reserves space
-           for it - it can never overlap data. */
-        tfoot {
-            display: table-footer-group;
-        }
+.summary td:last-child{
+    border-right:none;
+}
 
-        tr {
-            page-break-inside: avoid;
-        }
+.summary-title{
+    font-weight:bold;
+}
 
-        /* per-cell borders so every row stays "closed" at page breaks */
-        th,
-        td {
-            padding: 7px 8px;
-            border-right:  1px solid #d7dbe3;
-            border-bottom: 1px solid #d7dbe3;
-            font-size: 12px;
-            vertical-align: top;
-            word-wrap: break-word;
-            overflow-wrap: break-word;
-            word-break: break-word;
-        }
+.summary-value{
+    color:#0d4c97;
+    font-size:18px;
+    font-weight:bold;
+}
 
-        /* outer left + top edges (separate-mode equivalent of an outer
-           table border) */
-        th.first-col,
-        td.first-col {
-            border-left: 1px solid #d7dbe3;
-        }
+/* ==========================
+        FOOTER
+========================== */
 
-        thead th {
-            border-top: 1px solid #d7dbe3;
-        }
+.footer{
+    margin-top:20px;
+    border-top:2px solid #0d4c97;
+    padding-top:12px;
+}
 
-        th {
-            background-color: #f3f6fb;
-            text-align: left;
-            font-weight: bold;
-        }
+.footer table{
+    width:100%;
+}
 
-        .text-right {
-            text-align: right;
-        }
+.footer td{
+    width:25%;
+}
 
-        /* ---------- Per-page running footer (tfoot) ----------
-           The cell spans all 5 columns and gets a clean look (no grid
-           borders, just a single top separator).  Inside the cell we
-           use a CSS table to put "Generated: ..." on the left and
-           "Page X of Y" on the right.  counter(page) / counter(pages)
-           are resolved per page by openhtmltopdf, so no pageNo /
-           totalPages is needed in the data payload. */
-        tfoot td.page-footer-cell {
-            border-top:    1px solid #d7dbe3;
-            border-right:  none;
-            border-bottom: none;
-            border-left:   none;
-            padding: 6px 0 0 0;
-            font-size: 10px;
-            color: #555;
-            background: #fff;
-        }
+.footer-title{
+    font-weight:bold;
+    margin-bottom:3px;
+}
+</style>
 
-        .page-footer-row {
-            display: table;
-            width: 100%;
-            table-layout: fixed;
-        }
-
-        .page-footer-left {
-            display: table-cell;
-            text-align: left;
-        }
-
-        .page-footer-right {
-            display: table-cell;
-            text-align: right;
-        }
-
-        .pageno::before {
-            content: counter(page);
-        }
-
-        .pages::before {
-            content: counter(pages);
-        }
-    </style>
 </head>
 
 <body>
-    <div class="first-page-header">
-        {{#if showLogo}}
-        <div class="logo-wrap">
-            <img src="{{logo}}" alt="logo" />
-        </div>
-        {{/if}}
 
-        <div class="report-title">{{reportTitle}}</div>
+<div class="report">
 
-        <div class="meta-row">
-            <div class="meta-cell">{{#if showCreatedBy}}Created By: {{createdBy}}{{/if}}</div>
-            <div class="meta-cell-right">{{#if showCreatedOn}}Created On: {{createdOn}}{{/if}}</div>
-        </div>
+    <!-- HEADER -->
 
-        {{#if showFilters}}
-        <div class="filter-box">
-            <div class="filter-title">Filter Conditions</div>
-            {{#if filters}}
-            {{#each filters}}
-            <div class="filter-item">{{this.label}}: {{this.value}}</div>
-            {{/each}}
-            {{else}}
-            <div class="filter-item">-</div>
-            {{/if}}
-        </div>
-        {{/if}}
+    <div class="header">
+
+        <table class="header-table">
+
+            <tr>
+
+                <td class="company">
+
+                    <div class="logo"></div>
+
+                    <div class="company-details">
+
+                        <div class="company-name">
+                            {{companyName}}
+                        </div>
+
+                        <div class="company-address">
+                            {{companyAddress}}<br>
+                            GSTIN : {{gstNo}}
+                        </div>
+
+                    </div>
+
+                </td>
+
+                <td class="title">
+
+                    <div class="report-title">
+                        GRN DETAIL REPORT
+                    </div>
+
+                </td>
+
+                <td class="info">
+
+                    <table>
+
+                        <tr>
+                            <td><b>Created By</b></td>
+                            <td>{{createdBy}}</td>
+                        </tr>
+
+                        <tr>
+                            <td><b>Created On</b></td>
+                            <td>{{createdOn}}</td>
+                        </tr>
+
+                    </table>
+
+                </td>
+
+            </tr>
+
+        </table>
+
     </div>
 
-    <table>
-        <colgroup>
-            <col class="col-inv" />
-            <col class="col-product" />
-            <col class="col-qty" />
-            <col class="col-rate" />
-            <col class="col-discount" />
-            <col class="col-tax" />
-            <col class="col-gross" />
-            <col class="col-pending" />
-        </colgroup>
-        <thead>
-            <tr>
-                <th class="first-col">Invoice</th>
-                <th>Product</th>
-                <th class="text-right">Qty</th>
-                <th class="text-right">Rate</th>
-                <th class="text-right">Discount</th>
-                <th class="text-right">Tax</th>
-                <th class="text-right">Gross</th>
-                <th class="text-right">P.Qty</th>
-            </tr>
-        </thead>
-        {{!-- tfoot is declared before tbody so paginated engines pick it
-              up as the running footer.  openhtmltopdf re-emits this row
-              at the bottom of every page the table spans, BELOW the
-              last body row -> guaranteed never to overlap data. --}}
-        <tfoot>
-            <tr>
-                <td class="page-footer-cell" colspan="8">
-                    <div class="page-footer-row">
-                        <div class="page-footer-left">
-                            {{#if showCreatedOn}}Generated: {{createdOn}}{{/if}}
-                        </div>
-                        <div class="page-footer-right">
-                            {{#if showPageInfo}}Page <span class="pageno"></span> of <span class="pages"></span>{{/if}}
-                        </div>
-                    </div>
-                </td>
-            </tr>
-        </tfoot>
-        <tbody>
-            {{#each items}}
-            <tr>
-                <td class="first-col">{{this.docCode}}</td>
-                <td>{{this.productName}}</td>
-                <td class="text-right">{{this.qty}}</td>
-                <td class="text-right">{{this.rate}}</td>
-                <td class="text-right">{{this.discount}}</td>
-                <td class="text-right">{{this.taxAmount}}</td>
-                <td class="text-right">{{this.grossAmount}}</td>
-                <td class="text-right">{{this.pendingQty}}</td>
-            </tr>
-            {{/each}}
-        </tbody>
-    </table>
-</body>
+    <!-- FILTER -->
 
+    <div class="filter">
+
+        <div class="filter-header">
+            FILTER CONDITIONS
+        </div>
+
+        <div class="filter-body">
+
+            <table class="filter-table">
+
+                <tr>
+                    <td><b>From Date</b></td>
+                    <td>{{fromDate}}</td>
+
+                    <td><b>To Date</b></td>
+                    <td>{{toDate}}</td>
+                </tr>
+
+            </table>
+
+        </div>
+
+    </div>
+
+    <!-- TABLE -->
+
+    <table class="data-table">
+
+        <thead>
+
+        <tr>
+            <th>Invoice</th>
+            <th>Product</th>
+            <th>Qty</th>
+            <th>Rate</th>
+            <th>Discount</th>
+            <th>Tax</th>
+            <th>Gross</th>
+            <th>P.Qty</th>
+        </tr>
+
+        </thead>
+
+        <tbody>
+
+        {{#each items}}
+
+        <tr>
+
+            <td>{{invoice}}</td>
+            <td>{{product}}</td>
+
+            <td class="number">{{qty}}</td>
+            <td class="number">{{rate}}</td>
+            <td class="number">{{discount}}</td>
+            <td class="number">{{tax}}</td>
+            <td class="number">{{gross}}</td>
+            <td class="number">{{pendingQty}}</td>
+
+        </tr>
+
+        {{/each}}
+
+        </tbody>
+
+    </table>
+
+    <!-- SUMMARY -->
+
+    <div class="summary">
+
+        <table>
+
+            <tr>
+
+                <td>
+                    <div class="summary-title">Total Qty</div>
+                    <div class="summary-value">{{totalQty}}</div>
+                </td>
+
+                <td>
+                    <div class="summary-title">Total Discount</div>
+                    <div class="summary-value">{{totalDiscount}}</div>
+                </td>
+
+                <td>
+                    <div class="summary-title">Total Tax</div>
+                    <div class="summary-value">{{totalTax}}</div>
+                </td>
+
+                <td>
+                    <div class="summary-title">Total Gross</div>
+                    <div class="summary-value">{{totalGross}}</div>
+                </td>
+
+            </tr>
+
+        </table>
+
+    </div>
+
+    <!-- FOOTER -->
+
+    <div class="footer">
+
+        <table>
+
+            <tr>
+
+                <td>
+
+                    <div class="footer-title">
+                        Generated On
+                    </div>
+
+                    {{generatedOn}}
+
+                </td>
+
+                <td>
+
+                    <div class="footer-title">
+                        Generated By
+                    </div>
+
+                    {{createdBy}}
+
+                </td>
+
+                <td>
+
+                    <div class="footer-title">
+                        System
+                    </div>
+
+                    GRN System
+
+                </td>
+
+                <td style="text-align:right">
+
+                    <div class="footer-title">
+                        Page
+                    </div>
+
+                    {{pageNo}} of {{totalPages}}
+
+                </td>
+
+            </tr>
+
+        </table>
+
+    </div>
+
+</div>
+
+</body>
 </html>
